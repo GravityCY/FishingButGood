@@ -12,16 +12,19 @@
     "issues": "${mod_sources}"
   },
   "license": "${mod_license}",
-  "icon": "assets/example/icon.png",
+  "icon": "assets/fishing_but_good/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "main": [
-      "me.gravityio.example.ExampleMod"
+      "me.gravityio.fishingbutgood.FishingButGood"
+    ],
+    "preLaunch": [
+      "me.gravityio.fishingbutgood.FishingButGood"
     ]
   },
   "mixins": [
-    "example.mixins.json"
+    "fishing_but_good.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
