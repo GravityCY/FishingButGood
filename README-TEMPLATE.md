@@ -1,9 +1,9 @@
 # Multiline Mastery
 A fabric mod to slightly enhance fishing in Minecraft!
 ___
-**Requires [FAPI](https://modrinth.com/mod/fabric-api) and [YACL](https://modrinth.com/mod/yacl)**
+**Requires [FAPI](${fabric}) and [YACL](${yacl})**
 \
-**Recommend [ModMenu](https://modrinth.com/mod/modmenu)**
+**Recommend [ModMenu](${modmenu})**
 
 ![Sample](https://i.ibb.co/nfJ6P1Z/output.gif)
 ___
