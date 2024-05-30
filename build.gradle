@@ -1,23 +1,107 @@
-import java.util.regex.Pattern
 
 plugins {
     id "fabric-loom" version "1.3-SNAPSHOT"
     id "maven-publish"
+    id "com.modrinth.minotaur" version "2.+"
+    id 'net.darkhax.curseforgegradle' version "1.1.24"
 }
 
 version = project.mod_version
 group = "me.gravityio"
 
-project.dependencies.add("minecraft", "com.mojang:minecraft:${project.minecraft_version}")
-project.dependencies.add("mappings", "net.fabricmc:yarn:${project.project.yarn_version}:v2")
-project.dependencies.add("modImplementation", "net.fabricmc:fabric-loader:${project.loader_version}")
-// Optional
- project.dependencies.add("modImplementation", "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+def dependencyURLS = [
+        modrinth: [
+                yacl: "https://modrinth.com/mod/yacl",
+                fabric: "https://modrinth.com/mod/fabric-api",
+                modmenu: "https://modrinth.com/mod/modmenu"
+        ],
+        curseforge: [
+                yacl: "https://www.curseforge.com/minecraft/mc-mods/yacl",
+                fabric: "https://www.curseforge.com/minecraft/mc-mods/fabric-api",
+                modmenu: "https://www.curseforge.com/minecraft/mc-mods/modmenu"
+        ]
+]
+
+def changelog = "+ Release!"
+def mcVersions = ["1.20"]
+
+def replace(String input, String name, Map<String, Map<String, String>> names, String fileName) {
+    def cf = file("${fileName}.md");
+
+    def replaced = input
+    names[name].each {
+        replaced = replaced.replace('${'+it.key+'}', it.value)
+    }
+    cf.write(replaced, "UTF-8")
+}
+
+def replace(String input, String name, Map names) {
+    replace(input, name, names, name.toUpperCase())
+}
+
+tasks.register("readme") {
+    group = "documentation"
+
+    def input = file("README-TEMPLATE.md")
+    def inputText = input.getText("UTF-8")
+    replace(inputText, "curseforge", dependencyURLS)
+    replace(inputText, "modrinth", dependencyURLS)
+    replace(inputText, "modrinth", dependencyURLS, "README")
+}
+
+tasks.register("publishMod") {
+    group = "publishing"
+
+    dependsOn "publishCurseForge"
+    dependsOn "modrinth"
+}
+
+tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    disableVersionDetection()
+
+    group = "publishing"
+    apiToken = System.getenv("CURSEFORGE_UPLOAD");
+
+    def mainFile = upload(1027188, remapJar)
+    mainFile.changelog = changelog
+    mcVersions.each {
+        mainFile.addGameVersion(it)
+    }
+    mainFile.displayName = "${mod_name} ${mod_version}"
+    mainFile.addModLoader("Fabric")
+    mainFile.releaseType = "release"
+    mainFile.addJavaVersion("Java 17")
+    mainFile.addRequirement("fabric-api")
+    mainFile.addRequirement("yacl")
+    mainFile.addOptional("modmenu")
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_UPLOAD")
+    projectId = "multiline-mastery"
+    versionName = "${mod_name} ${mod_version}"
+    versionNumber = mod_version
+    uploadFile = remapJar
+    gameVersions = mcVersions
+    loaders = ["fabric"]
+    delegate.changelog = changelog
+    dependencies {
+        required.project "fabric-api"
+        required.project "yacl"
+        optional.project "modmenu"
+    }
+}
 
 repositories {
     maven { url "https://jitpack.io" }
     maven { url "https://maven.terraformersmc.com/releases/" }
 }
+
+// To separate default stuff with actual dependencies
+project.dependencies.add("minecraft", "com.mojang:minecraft:${project.minecraft_version}")
+project.dependencies.add("mappings", "net.fabricmc:yarn:${project.project.yarn_version}:v2")
+project.dependencies.add("modImplementation", "net.fabricmc:fabric-loader:${project.loader_version}")
+project.dependencies.add("modImplementation", "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
 dependencies {
     modLocalRuntime("com.terraformersmc:modmenu:7.0.1")
