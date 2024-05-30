@@ -44,8 +44,8 @@ tasks.register("readme") {
 
     def input = file("README-TEMPLATE.md")
     def inputText = input.getText("UTF-8")
-    replace(inputText, "curseforge", dependencyURLS)
-    replace(inputText, "modrinth", dependencyURLS)
+    replace(inputText, "curseforge", dependencyURLS, "readmes/CURSEFORGE")
+    replace(inputText, "modrinth", dependencyURLS, "readmes/MODRINTH")
     replace(inputText, "modrinth", dependencyURLS, "README")
 }
 
