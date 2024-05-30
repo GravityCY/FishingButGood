@@ -26,7 +26,7 @@ def changelog = "+ Release!"
 def mcVersions = ["1.20"]
 
 def replace(String input, String name, Map<String, Map<String, String>> names, String fileName) {
-    def cf = file("${fileName}.md");
+    def cf = file("${fileName}.md")
 
     def replaced = input
     names[name].each {
@@ -60,7 +60,7 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     disableVersionDetection()
 
     group = "publishing"
-    apiToken = System.getenv("CURSEFORGE_UPLOAD");
+    apiToken = System.getenv("CURSEFORGE_UPLOAD")
 
     def mainFile = upload(1027188, remapJar)
     mainFile.changelog = changelog
