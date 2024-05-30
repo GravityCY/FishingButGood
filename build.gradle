@@ -20,7 +20,7 @@ repositories {
 }
 
 dependencies {
-    modLocalRuntime("com.terraformersmc:modmenu:6.3.1")
+    modLocalRuntime("com.terraformersmc:modmenu:7.0.1")
     implementation("com.github.LlamaLad7:MixinExtras:0.1.1")
     annotationProcessor("com.github.LlamaLad7:MixinExtras:0.1.1")
     include("com.github.LlamaLad7:MixinExtras:0.1.1")

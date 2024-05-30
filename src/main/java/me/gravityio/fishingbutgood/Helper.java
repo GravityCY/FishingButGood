@@ -5,22 +5,25 @@ import me.gravityio.fishingbutgood.mixins.inter.ModPlayer;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
+import net.minecraft.item.FishingRodItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.List;
+
 public class Helper {
-    public static final int DEGREES = 10;
+    public static final int RANGE = 15;
 
     /**
      * Is the player looking at the bobber using the DEGREES angle
      */
-    public static boolean isLookingAtBobber(PlayerEntity player, FishingBobberEntity bobber) {
+    public static boolean isLookingAtBobber(PlayerEntity player, FishingBobberEntity bobber, int range) {
         var degrees = Math.toDegrees(getLookAngle(player, bobber));
-        return degrees < DEGREES;
+        return degrees < range;
     }
 
-    // No cluue what this is doing just asked chatgpt
+    // No clue what this is doing just asked ChatGPT
     public static double getLookAngle(PlayerEntity player, FishingBobberEntity bobber) {
         var looking = player.getRotationVecClient();
         looking = new Vec3d(looking.x, 0, looking.z).normalize();
@@ -31,19 +34,53 @@ public class Helper {
     }
 
     /**
-     * Gets the bobber the player is looking at
+     * Gets the bobber the player is looking at <br>
+     * If you can throw more bobbers return the one you're looking at <br>
+     * If you can't throw more bobbers return the closest one
      */
-    public static FishingBobberEntity getLookingBobber(PlayerEntity player) {
+    public static FishingBobberEntity getLookingBobber(PlayerEntity player, ItemStack rodStack) {
         var modPlayer = (ModPlayer) player;
 
-        var all = modPlayer.fishingButGood$getBobbers();
-        if (all.isEmpty()) return null;
+        var allBobbers = modPlayer.fishingButGood$getBobbers();
+        if (allBobbers.isEmpty()) return null;
 
-        for (FishingBobberEntity bobber : all) {
-            if (isLookingAtBobber(player, bobber))
+        if (Helper.canCastBobber(player, rodStack)) {
+            return getLookingBobber(player, allBobbers);
+        } else {
+            return getClosestLookingBobber(player, allBobbers);
+        }
+    }
+
+    public static FishingBobberEntity getLookingBobber(PlayerEntity player) {
+        var modPlayer = (ModPlayer) player;
+        var allBobbers = modPlayer.fishingButGood$getBobbers();
+        return getLookingBobber(player, allBobbers);
+    }
+
+    private static FishingBobberEntity getLookingBobber(PlayerEntity player, List<FishingBobberEntity> bobbers) {
+        if (bobbers.isEmpty()) return null;
+        for (FishingBobberEntity bobber : bobbers) {
+            if (isLookingAtBobber(player, bobber, RANGE))
                 return bobber;
         }
         return null;
+    }
+
+    /**
+     * Given a list of bobbers return the one that is closest in regard to Y view angle
+     */
+    private static FishingBobberEntity getClosestLookingBobber(PlayerEntity player, List<FishingBobberEntity> bobbers) {
+        if (bobbers.isEmpty()) return null;
+        FishingBobberEntity closestBobber = null;
+        double closest = 1000.0;
+
+        for (FishingBobberEntity bobber : bobbers) {
+            var lookAngle = getLookAngle(player, bobber);
+            if (lookAngle > closest) continue;
+            closest = lookAngle;
+            closestBobber = bobber;
+        }
+        return closestBobber;
     }
 
     /**
@@ -91,12 +128,20 @@ public class Helper {
 
     public static void modifyModBobber(FishingBobberEntity bobber, ItemStack stack) {
         var modBobber = (ModFishingBobber) bobber;
-        var fishesLoveMe = getFishesLoveMeLevel(stack);
-        modBobber.fishingButGood$setSeafarersFortune(fishesLoveMe);
+        var fortune = getSeafarersFortuneLevel(stack);
+        modBobber.fishingButGood$setSeafarersFortune(fortune);
     }
 
-    public static int getFishesLoveMeLevel(ItemStack stack) {
+    public static int getSeafarersFortuneLevel(ItemStack stack) {
         return EnchantmentHelper.getLevel(FishingButGood.SEAFARERS_FORTUNE_ENCHANT, stack);
+    }
+    public static ItemStack getFishingRod(PlayerEntity player) {
+        for (ItemStack handItem : player.getHandItems()) {
+            if (handItem.getItem() instanceof FishingRodItem) {
+                return handItem;
+            }
+        }
+        return null;
     }
 
     public static int getMultiLevel(ItemStack stack) {

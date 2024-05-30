@@ -29,10 +29,10 @@ public class FishingButGood implements ModInitializer, PreLaunchEntrypoint {
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final MultilineMasteryEnchant MULTILINE_MASTERY_ENCHANT = new MultilineMasteryEnchant();
     public static final SeafarersFortuneEnchant SEAFARERS_FORTUNE_ENCHANT = new SeafarersFortuneEnchant();
-    public static boolean DEBUG = false;
+    public static boolean IS_DEBUG = false;
 
     public static void DEBUG(String message, Object... args) {
-        if (DEBUG) LOGGER.info(message, args);
+        if (IS_DEBUG) LOGGER.info(message, args);
     }
 
     @Override
@@ -42,9 +42,10 @@ public class FishingButGood implements ModInitializer, PreLaunchEntrypoint {
 
     @Override
     public void onInitialize() {
-        DEBUG = FabricLoader.getInstance().isDevelopmentEnvironment();
-        Registry.register(Registries.ENCHANTMENT, new Identifier("fishing_but_good", "multiline_mastery"), MULTILINE_MASTERY_ENCHANT);
-        Registry.register(Registries.ENCHANTMENT, new Identifier("fishing_but_good", "seafarers_fortune"), SEAFARERS_FORTUNE_ENCHANT);
+        IS_DEBUG = FabricLoader.getInstance().isDevelopmentEnvironment();
+
+        Registry.register(Registries.ENCHANTMENT, new Identifier(MOD_ID, "multiline_mastery"), MULTILINE_MASTERY_ENCHANT);
+        Registry.register(Registries.ENCHANTMENT, new Identifier(MOD_ID, "seafarers_fortune"), SEAFARERS_FORTUNE_ENCHANT);
         LootTableEvents.MODIFY.register(this::onInitLoot);
     }
 
@@ -53,10 +54,10 @@ public class FishingButGood implements ModInitializer, PreLaunchEntrypoint {
             DEBUG("Registering FISHING_TREASURE_GAMEPLAY Loot Table");
             var pool = LootPool.builder();
             pool.conditionally(RandomChanceLootCondition.builder(0.03f).build());
-            var lowFarer = getEnchantBookEntry(SEAFARERS_FORTUNE_ENCHANT, ConstantLootNumberProvider.create(1)).weight(40);
-            var lowMulti = getEnchantBookEntry(MULTILINE_MASTERY_ENCHANT, ConstantLootNumberProvider.create(1)).weight(20);
-            var highFarer = getEnchantBookEntry(SEAFARERS_FORTUNE_ENCHANT, UniformLootNumberProvider.create(2, 3)).weight(6);
-            var highMulti = getEnchantBookEntry(MULTILINE_MASTERY_ENCHANT, UniformLootNumberProvider.create(2, 3)).weight(3);
+            var lowFarer = getEnchantBookEntry(SEAFARERS_FORTUNE_ENCHANT, ConstantLootNumberProvider.create(1)).weight(40); // 0.57
+            var lowMulti = getEnchantBookEntry(MULTILINE_MASTERY_ENCHANT, ConstantLootNumberProvider.create(1)).weight(20); // 0.28
+            var highFarer = getEnchantBookEntry(SEAFARERS_FORTUNE_ENCHANT, UniformLootNumberProvider.create(2, 3)).weight(6); // 0.08
+            var highMulti = getEnchantBookEntry(MULTILINE_MASTERY_ENCHANT, UniformLootNumberProvider.create(2, 3)).weight(3); // 0.04
             pool.with(lowFarer);
             pool.with(lowMulti);
             pool.with(highFarer);
@@ -66,8 +67,8 @@ public class FishingButGood implements ModInitializer, PreLaunchEntrypoint {
             DEBUG("Registering ELDER_GUARDIAN Loot Table");
             var pool = LootPool.builder();
             pool.conditionally(RandomChanceLootCondition.builder(0.1f).build());
-            var lowFishes = getEnchantBookEntry(SEAFARERS_FORTUNE_ENCHANT, ConstantLootNumberProvider.create(1)).weight(2);
-            var lowMulti = getEnchantBookEntry(MULTILINE_MASTERY_ENCHANT, ConstantLootNumberProvider.create(1)).weight(1);
+            var lowFishes = getEnchantBookEntry(SEAFARERS_FORTUNE_ENCHANT, ConstantLootNumberProvider.create(1)).weight(2); // 0.66
+            var lowMulti = getEnchantBookEntry(MULTILINE_MASTERY_ENCHANT, ConstantLootNumberProvider.create(1)).weight(1); // 0.33
             pool.with(lowFishes);
             pool.with(lowMulti);
             builder.pool(pool);

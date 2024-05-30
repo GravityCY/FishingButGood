@@ -5,13 +5,14 @@ import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
 
 public class SeafarersFortuneEnchant extends Enchantment {
+    public static final int MAX_LEVEL = 3;
     protected SeafarersFortuneEnchant() {
         super(Rarity.RARE, EnchantmentTarget.FISHING_ROD, new EquipmentSlot[] { EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND });
     }
 
     @Override
     public int getMaxLevel() {
-        return 3;
+        return MAX_LEVEL;
     }
 
     @Override

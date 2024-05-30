@@ -9,6 +9,7 @@
     "ModPlayerMixin"
   ],
   "client": [
+    "FishingBobberRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
