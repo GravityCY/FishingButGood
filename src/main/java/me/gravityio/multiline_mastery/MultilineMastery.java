@@ -34,8 +34,8 @@ import org.slf4j.LoggerFactory;
 public class MultilineMastery implements ModInitializer, PreLaunchEntrypoint {
     public static String MOD_ID = "multilinemastery";
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final MultilineMasteryEnchant MULTILINE_MASTERY_ENCHANT = new MultilineMasteryEnchant();
-    public static final SeafarersFortuneEnchant SEAFARERS_FORTUNE_ENCHANT = new SeafarersFortuneEnchant();
+    public static MultilineMasteryEnchant MULTILINE_MASTERY_ENCHANT;
+    public static SeafarersFortuneEnchant SEAFARERS_FORTUNE_ENCHANT;
     public static boolean IS_DEBUG = false;
 
     public static void DEBUG(String message, Object... args) {
@@ -50,6 +50,9 @@ public class MultilineMastery implements ModInitializer, PreLaunchEntrypoint {
     @Override
     public void onInitialize() {
         IS_DEBUG = FabricLoader.getInstance().isDevelopmentEnvironment();
+        MULTILINE_MASTERY_ENCHANT = new MultilineMasteryEnchant();
+        SEAFARERS_FORTUNE_ENCHANT = new SeafarersFortuneEnchant();
+
         ModConfig.HANDLER.load();
 
         ServerPlayNetworking.registerGlobalReceiver(SyncPacket.TYPE, (packet, player, responseSender) -> {
