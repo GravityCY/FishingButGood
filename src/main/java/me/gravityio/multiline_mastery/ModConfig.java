@@ -6,11 +6,11 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
+import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
 import dev.isxander.yacl3.config.v2.api.serializer.GsonConfigSerializerBuilder;
 import me.gravityio.multiline_mastery.api.Watched;
-import me.gravityio.multiline_mastery.gui.AngleSliderController;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -40,7 +40,7 @@ public class ModConfig {
                     .name(Text.translatable("yacl.multilinemastery.angle.label"))
                     .description(OptionDescription.of(Text.translatable("yacl.multilinemastery.angle.description")))
                     .binding(defaults.angle.get(), config.angle::get, config.angle::set)
-                    .customController(opt -> new AngleSliderController(opt, 1, 90, 1));
+                    .controller(opt -> IntegerSliderControllerBuilder.create(opt).step(1).range(1, 90).formatValue(v -> Text.literal(v + "deg")));
 
             category.option(angleOpt.build());
 
