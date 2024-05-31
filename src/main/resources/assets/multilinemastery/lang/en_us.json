@@ -5,5 +5,7 @@
   "enchantment.multilinemastery.multiline_mastery.desc": "Allows for throwing multiple fishing lines.",
   "yacl.multilinemastery.title": "Multiline Mastery",
   "yacl.multilinemastery.angle.label": "Hook Angle",
-  "yacl.multilinemastery.angle.description": "The angle you need to satisfy to reel back a hook."
+  "yacl.multilinemastery.angle.description": "The angle you need to satisfy to reel back a hook.",
+  "yacl.multilinemastery.highlight.label": "Highlight",
+  "yacl.multilinemastery.highlight.description": "Whether to render the bobber with an outline in order to highlight which one you're looking at."
 }

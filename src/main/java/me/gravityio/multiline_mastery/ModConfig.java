@@ -6,6 +6,7 @@ import dev.isxander.yacl3.api.ConfigCategory;
 import dev.isxander.yacl3.api.Option;
 import dev.isxander.yacl3.api.OptionDescription;
 import dev.isxander.yacl3.api.YetAnotherConfigLib;
+import dev.isxander.yacl3.api.controller.BooleanControllerBuilder;
 import dev.isxander.yacl3.api.controller.IntegerSliderControllerBuilder;
 import dev.isxander.yacl3.config.v2.api.ConfigClassHandler;
 import dev.isxander.yacl3.config.v2.api.SerialEntry;
@@ -30,6 +31,8 @@ public class ModConfig {
 
     @SerialEntry
     public Watched<Integer> angle = new Watched<>(15);
+    @SerialEntry
+    public boolean highlight = true;
 
     public Screen getScreen(Screen parent) {
         return YetAnotherConfigLib.create(HANDLER, (defaults, config, builder) -> {
@@ -42,7 +45,14 @@ public class ModConfig {
                     .binding(defaults.angle.get(), config.angle::get, config.angle::set)
                     .controller(opt -> IntegerSliderControllerBuilder.create(opt).step(1).range(1, 90).formatValue(v -> Text.literal(v + "deg")));
 
+            var highlightOpt = Option.<Boolean>createBuilder()
+                    .name(Text.translatable("yacl.multilinemastery.highlight.label"))
+                    .description(OptionDescription.of(Text.translatable("yacl.multilinemastery.highlight.description")))
+                    .binding(defaults.highlight, () -> config.highlight, v -> config.highlight = v)
+                    .controller(opt -> BooleanControllerBuilder.create(opt).coloured(true).yesNoFormatter());
+
             category.option(angleOpt.build());
+            category.option(highlightOpt.build());
 
             builder.title(Text.translatable("yacl.multilinemastery.title"));
             builder.category(category.build());

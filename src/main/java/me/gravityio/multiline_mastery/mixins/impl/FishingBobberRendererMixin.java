@@ -1,6 +1,7 @@
 package me.gravityio.multiline_mastery.mixins.impl;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import me.gravityio.multiline_mastery.ModConfig;
 import me.gravityio.multiline_mastery.MultilineMastery;
 import me.gravityio.multiline_mastery.helper.ModHelper;
 import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
@@ -39,6 +40,8 @@ public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingB
             )
     )
     private VertexConsumer getHoveredTexture(VertexConsumer _original, FishingBobberEntity bobber, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
+        if (!ModConfig.HANDLER.instance().highlight) return _original;
+
         var player = (ModPlayer) bobber.getPlayerOwner();
         if (player == null) return _original;
         var rodStack = ModHelper.getFishingRod(player);
