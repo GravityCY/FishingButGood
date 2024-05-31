@@ -68,9 +68,10 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
         mainFile.addGameVersion(it)
     }
     mainFile.displayName = "${mod_name} ${mod_version}"
+    mainFile.addEnvironment("Client", "Server")
     mainFile.addModLoader("Fabric")
     mainFile.releaseType = "release"
-    mainFile.addJavaVersion("Java 17")
+    mainFile.addJavaVersion("Java 21")
     mainFile.addRequirement("fabric-api")
     mainFile.addRequirement("yacl")
     mainFile.addOptional("modmenu")
