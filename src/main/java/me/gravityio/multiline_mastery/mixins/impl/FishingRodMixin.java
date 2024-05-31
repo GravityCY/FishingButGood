@@ -3,6 +3,7 @@ package me.gravityio.multiline_mastery.mixins.impl;
 import me.gravityio.multiline_mastery.MultilineMastery;
 import me.gravityio.multiline_mastery.helper.ModHelper;
 import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.FishingRodItem;
 import net.minecraft.item.Item;
@@ -32,6 +33,8 @@ public class FishingRodMixin extends Item {
         ItemStack stack = player.getStackInHand(hand);
         ModPlayer modPlayer = (ModPlayer) player;
 
+        EquipmentSlot slot = hand == Hand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+
         var looking = ModHelper.getLookingBobber(modPlayer, stack);
         if (looking == null) {
             if (ModHelper.canCastBobber(modPlayer, stack)) {
@@ -54,7 +57,7 @@ public class FishingRodMixin extends Item {
             }
             MultilineMastery.DEBUG("Using Hook player is looking at!");
             int i = looking.use(stack);
-            stack.damage(i, player, p -> p.sendToolBreakStatus(hand));
+            stack.damage(i, player, slot);
         }
         cir.setReturnValue(TypedActionResult.success(stack, world.isClient()));
     }

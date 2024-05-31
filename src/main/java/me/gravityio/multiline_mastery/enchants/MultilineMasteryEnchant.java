@@ -1,19 +1,14 @@
 package me.gravityio.multiline_mastery.enchants;
 
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
+import net.minecraft.registry.tag.ItemTags;
 
 public class MultilineMasteryEnchant extends Enchantment {
     public static final int MAX_LEVEL = 3;
 
     public MultilineMasteryEnchant() {
-        super(Rarity.RARE, EnchantmentTarget.FISHING_ROD, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return MAX_LEVEL;
+        super(Enchantment.properties(ItemTags.FISHING_ENCHANTABLE, 1, MAX_LEVEL, Enchantment.constantCost(0), Enchantment.constantCost(0), 4, EquipmentSlot.MAINHAND));
     }
 
     @Override

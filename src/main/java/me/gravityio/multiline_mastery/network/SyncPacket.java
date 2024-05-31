@@ -1,13 +1,15 @@
 package me.gravityio.multiline_mastery.network;
 
 import me.gravityio.multiline_mastery.MultilineMastery;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 
-public class SyncPacket implements FabricPacket {
-    public static final PacketType<SyncPacket> TYPE = PacketType.create(new Identifier(MultilineMastery.MOD_ID, "sync"), SyncPacket::new);
+public class SyncPacket implements CustomPayload {
+    public static final Id<SyncPacket> ID = new Id<>(new Identifier(MultilineMastery.MOD_ID, "sync"));
+    public static final PacketCodec<PacketByteBuf, SyncPacket> CODEC = PacketCodec.of(SyncPacket::write, SyncPacket::new);
+
     private final int angle;
 
     public SyncPacket(int angle) {
@@ -18,17 +20,15 @@ public class SyncPacket implements FabricPacket {
         this.angle = buf.readInt();
     }
 
-    @Override
     public void write(PacketByteBuf buf) {
         buf.writeInt(this.angle);
     }
-
-    @Override
-    public PacketType<?> getType() {
-        return TYPE;
-    }
-
     public int getAngle() {
         return this.angle;
+    }
+
+    @Override
+    public Id<? extends CustomPayload> getId() {
+        return ID;
     }
 }
