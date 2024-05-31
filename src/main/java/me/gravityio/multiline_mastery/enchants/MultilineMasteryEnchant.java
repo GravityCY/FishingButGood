@@ -1,13 +1,14 @@
-package me.gravityio.fishingbutgood;
+package me.gravityio.multiline_mastery.enchants;
 
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.entity.EquipmentSlot;
 
-public class SeafarersFortuneEnchant extends Enchantment {
+public class MultilineMasteryEnchant extends Enchantment {
     public static final int MAX_LEVEL = 3;
-    protected SeafarersFortuneEnchant() {
-        super(Rarity.RARE, EnchantmentTarget.FISHING_ROD, new EquipmentSlot[] { EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND });
+
+    public MultilineMasteryEnchant() {
+        super(Rarity.RARE, EnchantmentTarget.FISHING_ROD, new EquipmentSlot[]{EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND});
     }
 
     @Override

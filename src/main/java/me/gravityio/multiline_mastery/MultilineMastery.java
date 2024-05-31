@@ -1,9 +1,14 @@
-package me.gravityio.fishingbutgood;
+package me.gravityio.multiline_mastery;
 
 import com.llamalad7.mixinextras.MixinExtrasBootstrap;
+import me.gravityio.multiline_mastery.enchants.MultilineMasteryEnchant;
+import me.gravityio.multiline_mastery.enchants.SeafarersFortuneEnchant;
+import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
+import me.gravityio.multiline_mastery.network.SyncPacket;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.loot.v2.LootTableEvents;
 import net.fabricmc.fabric.api.loot.v2.LootTableSource;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 import net.minecraft.enchantment.Enchantment;
@@ -16,7 +21,9 @@ import net.minecraft.loot.LootTables;
 import net.minecraft.loot.condition.RandomChanceLootCondition;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.SetEnchantmentsLootFunction;
-import net.minecraft.loot.provider.number.*;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
+import net.minecraft.loot.provider.number.LootNumberProvider;
+import net.minecraft.loot.provider.number.UniformLootNumberProvider;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.resource.ResourceManager;
@@ -24,8 +31,8 @@ import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class FishingButGood implements ModInitializer, PreLaunchEntrypoint {
-    public static String MOD_ID = "fishing_but_good";
+public class MultilineMastery implements ModInitializer, PreLaunchEntrypoint {
+    public static String MOD_ID = "multiline_mastery";
     public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final MultilineMasteryEnchant MULTILINE_MASTERY_ENCHANT = new MultilineMasteryEnchant();
     public static final SeafarersFortuneEnchant SEAFARERS_FORTUNE_ENCHANT = new SeafarersFortuneEnchant();
@@ -43,6 +50,13 @@ public class FishingButGood implements ModInitializer, PreLaunchEntrypoint {
     @Override
     public void onInitialize() {
         IS_DEBUG = FabricLoader.getInstance().isDevelopmentEnvironment();
+        ModConfig.HANDLER.load();
+
+        ServerPlayNetworking.registerGlobalReceiver(SyncPacket.TYPE, (packet, player, responseSender) -> {
+            DEBUG("Setting angle for player '{}' to {}", player.getName().getString(), packet.getAngle());
+            ModPlayer modPlayer = (ModPlayer) player;
+            modPlayer.fishingButGood$setAngle(packet.getAngle());
+        });
 
         Registry.register(Registries.ENCHANTMENT, new Identifier(MOD_ID, "multiline_mastery"), MULTILINE_MASTERY_ENCHANT);
         Registry.register(Registries.ENCHANTMENT, new Identifier(MOD_ID, "seafarers_fortune"), SEAFARERS_FORTUNE_ENCHANT);

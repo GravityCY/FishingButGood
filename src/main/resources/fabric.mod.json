@@ -4,31 +4,38 @@
   "name": "${mod_name}",
   "version": "${mod_version}",
   "description": "${mod_description}",
-  "authors": ["${mod_author}"],
-
+  "authors": [
+    "${mod_author}"
+  ],
   "contact": {
     "homepage": "${mod_sources}",
     "sources": "${mod_sources}",
     "issues": "${mod_sources}"
   },
   "license": "${mod_license}",
-  "icon": "assets/fishing_but_good/icon.png",
-
+  "icon": "assets/multiline_mastery/icon.png",
   "environment": "*",
   "entrypoints": {
+    "client": [
+      "me.gravityio.multiline_mastery.client.MultilineMasteryClient"
+    ],
     "main": [
-      "me.gravityio.fishingbutgood.FishingButGood"
+      "me.gravityio.multiline_mastery.MultilineMastery"
     ],
     "preLaunch": [
-      "me.gravityio.fishingbutgood.FishingButGood"
+      "me.gravityio.multiline_mastery.MultilineMastery"
+    ],
+    "modmenu": [
+      "me.gravityio.multiline_mastery.compat.ModMenuImpl"
     ]
   },
   "mixins": [
-    "fishing_but_good.mixins.json"
+    "multiline_mastery.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
     "minecraft": ">=${minecraft_version}",
+    "yet_another_config_lib_v3": "*",
     "java": ">=17"
   }
 }

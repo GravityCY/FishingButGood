@@ -1,4 +1,4 @@
-package me.gravityio.fishingbutgood.mixins.inter;
+package me.gravityio.multiline_mastery.mixins.inter;
 
 public interface ModFishingBobber {
 

@@ -1,7 +1,9 @@
-package me.gravityio.fishingbutgood.mixins.impl;
+package me.gravityio.multiline_mastery.mixins.impl;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import me.gravityio.fishingbutgood.Helper;
+import me.gravityio.multiline_mastery.MultilineMastery;
+import me.gravityio.multiline_mastery.helper.ModHelper;
+import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -20,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(FishingBobberEntityRenderer.class)
 public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingBobberEntity> {
     @Unique
-    private static final Identifier HOVER_TEXTURE = new Identifier("fishing_but_good", "textures/entity/fishing_bobber_hover.png");
+    private static final Identifier HOVER_TEXTURE = new Identifier(MultilineMastery.MOD_ID, "textures/entity/fishing_bobber_hover.png");
     @Unique
     private static final RenderLayer HOVER_LAYER = RenderLayer.getEntityCutout(HOVER_TEXTURE);
 
@@ -37,11 +39,15 @@ public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingB
             )
     )
     private VertexConsumer getHoveredTexture(VertexConsumer _original, FishingBobberEntity bobber, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i) {
-        var player = bobber.getPlayerOwner();
+        var player = (ModPlayer) bobber.getPlayerOwner();
         if (player == null) return _original;
-        var rodStack = Helper.getFishingRod(player);
+        var rodStack = ModHelper.getFishingRod(player);
         if (rodStack == null) return _original;
-        return Helper.getLookingBobber(player, rodStack) == bobber ? vertexConsumerProvider.getBuffer(HOVER_LAYER) : _original;
+
+        if (ModHelper.getLookingBobber(player, rodStack) == bobber) {
+            return vertexConsumerProvider.getBuffer(HOVER_LAYER);
+        }
+        return _original;
     }
 
 }

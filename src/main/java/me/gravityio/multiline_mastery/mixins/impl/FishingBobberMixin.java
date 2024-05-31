@@ -1,8 +1,9 @@
-package me.gravityio.fishingbutgood.mixins.impl;
+package me.gravityio.multiline_mastery.mixins.impl;
 
-import me.gravityio.fishingbutgood.FishingButGood;
-import me.gravityio.fishingbutgood.Helper;
-import me.gravityio.fishingbutgood.mixins.inter.ModFishingBobber;
+import me.gravityio.multiline_mastery.MultilineMastery;
+import me.gravityio.multiline_mastery.helper.ModHelper;
+import me.gravityio.multiline_mastery.mixins.inter.ModFishingBobber;
+import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
@@ -26,7 +27,8 @@ import java.util.List;
 @Mixin(FishingBobberEntity.class)
 public abstract class FishingBobberMixin extends ProjectileEntity implements ModFishingBobber {
 
-    @Shadow public abstract @Nullable PlayerEntity getPlayerOwner();
+    @Shadow
+    public abstract @Nullable PlayerEntity getPlayerOwner();
 
     @Unique
     private int seafarersFortune;
@@ -62,18 +64,20 @@ public abstract class FishingBobberMixin extends ProjectileEntity implements Mod
     private void setModdedPlayerFishHook(@Nullable FishingBobberEntity fishingBobber, CallbackInfo ci) {
         var self = (FishingBobberEntity) (Object) this;
         var player = this.getPlayerOwner();
-        var thrown = Helper.getTotalThrownHooks(player);
+        var modPlayer = (ModPlayer) player;
+
+        var thrown = ModHelper.getTotalThrownHooks(modPlayer);
         if (fishingBobber == null) {
             if (thrown == 1)
                 player.fishHook = null;
-            FishingButGood.DEBUG("Removing Mod Bobber");
-            Helper.removeModBobber(player, self);
+            MultilineMastery.DEBUG("Removing Mod Bobber");
+            ModHelper.removeModBobber(modPlayer, self);
         } else {
             if (thrown == 0) {
                 player.fishHook = fishingBobber;
             }
-            FishingButGood.DEBUG("Adding Mod Bobber");
-            Helper.addModBobber(player, fishingBobber);
+            MultilineMastery.DEBUG("Adding Mod Bobber");
+            ModHelper.addModBobber(modPlayer, fishingBobber);
         }
         ci.cancel();
     }
