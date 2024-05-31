@@ -5,8 +5,7 @@ ___
 \
 **Recommend [ModMenu](https://modrinth.com/mod/modmenu)**
 
-![output](https://github.com/GravityCY/FishingButGood/assets/49225419/4480a3b7-09a7-4905-b632-015d8ab311fe)
-
+![Sample](https://github.com/GravityCY/FishingButGood/assets/49225419/4480a3b7-09a7-4905-b632-015d8ab311fe)
 ___
 ## Multiline Mastery
 An enchantment that allows you to throw multiple lines at once.

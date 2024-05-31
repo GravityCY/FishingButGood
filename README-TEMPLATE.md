@@ -5,7 +5,7 @@ ___
 \
 **Recommend [ModMenu](${modmenu})**
 
-![Sample](https://i.ibb.co/nfJ6P1Z/output.gif)
+![Sample](https://github.com/GravityCY/FishingButGood/assets/49225419/4480a3b7-09a7-4905-b632-015d8ab311fe)
 ___
 ## Multiline Mastery
 An enchantment that allows you to throw multiple lines at once.
@@ -18,6 +18,6 @@ An enchantment that gives you more loot from fishing (fish, treasure and junk).
 
 _~~or I just tell you how to get them~~_
 
-+ **There is a 3% chance to get either of them from fishing** *(and the levels are random, higher levels are rare)*
-+ **There is a 10% chance to get either of them from killing an Elder Guardian**
++ **There is a ~1% chance to get either of them from fishing treasure** *(and the levels are random, higher levels are rarer)*
++ **There is a 25% chance to get either of them from killing an Elder Guardian**
 
