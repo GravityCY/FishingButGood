@@ -23,7 +23,7 @@ def dependencyURLS = [
 ]
 
 def changelog = "+ Release!"
-def mcVersions = ["1.20", "1.20.1", "1.20.2", "1.20.3"]
+def mcVersions = ["1.20", "1.20.1", "1.20.2", "1.20.3", "1.20.4"]
 
 def replace(String input, String name, Map<String, Map<String, String>> names, String fileName) {
     def cf = file("${fileName}.md")
