@@ -12,13 +12,13 @@ import org.joml.Vector2f;
 public class AngleWidget extends SliderControllerElement {
 
     public static final float NEG_HALF_PI = (float) (-Math.PI / 2);
+    public static final int OFFSET = 2;
+    public static final float WIDTH = 0.5f;
 
     protected Vector2f origin;
     protected Vector2f linea;
     protected Vector2f lineb;
 
-    protected int offset = 2;
-    protected float width = 0.5f;
     protected int length;
     protected float halfAngle;
     protected String current;
@@ -86,12 +86,12 @@ public class AngleWidget extends SliderControllerElement {
     @Override
     public void setDimension(Dimension<Integer> dim) {
         super.setDimension(dim);
-        var newLength = dim.height() - this.offset * 2;
+        var newLength = dim.height() - this.OFFSET * 2;
         if (this.length != newLength) {
             this.length = newLength;
             this.updateLines();
         }
-        this.origin = new Vector2f(dim.x() + (float) dim.width() + 33, dim.y() + dim.height() - this.offset);
+        this.origin = new Vector2f(dim.x() + (float) dim.width() + 33, dim.y() + dim.height() - this.OFFSET);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class AngleWidget extends SliderControllerElement {
             this.current = String.valueOf(this.previousValue);
         }
 
-        RenderHelper.drawLine(context, this.origin.x, this.origin.x + this.linea.x, this.origin.y, this.origin.y + this.linea.y, this.width);
-        RenderHelper.drawLine(context, this.origin.x, this.origin.x + this.lineb.x, this.origin.y, this.origin.y + this.lineb.y, this.width);
+        RenderHelper.drawLine(context, this.origin.x, this.origin.x + this.linea.x, this.origin.y, this.origin.y + this.linea.y, this.WIDTH);
+        RenderHelper.drawLine(context, this.origin.x, this.origin.x + this.lineb.x, this.origin.y, this.origin.y + this.lineb.y, this.WIDTH);
     }
 }
