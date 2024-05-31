@@ -67,7 +67,7 @@ public class MultilineMastery implements ModInitializer, PreLaunchEntrypoint {
         if (LootTables.FISHING_TREASURE_GAMEPLAY.equals(identifier)) {
             DEBUG("Registering FISHING_TREASURE_GAMEPLAY Loot Table");
             var pool = LootPool.builder();
-            pool.conditionally(RandomChanceLootCondition.builder(0.03f).build());
+            pool.conditionally(RandomChanceLootCondition.builder(0.1f).build());
             var lowFarer = getEnchantBookEntry(SEAFARERS_FORTUNE_ENCHANT, ConstantLootNumberProvider.create(1)).weight(40); // 0.57
             var lowMulti = getEnchantBookEntry(MULTILINE_MASTERY_ENCHANT, ConstantLootNumberProvider.create(1)).weight(20); // 0.28
             var highFarer = getEnchantBookEntry(SEAFARERS_FORTUNE_ENCHANT, UniformLootNumberProvider.create(2, 3)).weight(6); // 0.08
@@ -80,7 +80,7 @@ public class MultilineMastery implements ModInitializer, PreLaunchEntrypoint {
         } else if (EntityType.ELDER_GUARDIAN.getLootTableId().equals(identifier)) {
             DEBUG("Registering ELDER_GUARDIAN Loot Table");
             var pool = LootPool.builder();
-            pool.conditionally(RandomChanceLootCondition.builder(0.1f).build());
+            pool.conditionally(RandomChanceLootCondition.builder(0.25f).build());
             var lowFishes = getEnchantBookEntry(SEAFARERS_FORTUNE_ENCHANT, ConstantLootNumberProvider.create(1)).weight(2); // 0.66
             var lowMulti = getEnchantBookEntry(MULTILINE_MASTERY_ENCHANT, ConstantLootNumberProvider.create(1)).weight(1); // 0.33
             pool.with(lowFishes);

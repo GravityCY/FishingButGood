@@ -19,6 +19,6 @@ An enchantment that gives you more loot from fishing (fish, treasure and junk).
 
 _~~or I just tell you how to get them~~_
 
-+ **There is a 3% chance to get either of them from fishing** *(and the levels are random, higher levels are rare)*
-+ **There is a 10% chance to get either of them from killing an Elder Guardian**
++ **There is a ~1% chance to get either of them from fishing treasure** *(and the levels are random, higher levels are rarer)*
++ **There is a 25% chance to get either of them from killing an Elder Guardian**
 
