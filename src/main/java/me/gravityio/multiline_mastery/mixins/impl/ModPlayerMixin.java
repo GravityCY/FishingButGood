@@ -1,8 +1,12 @@
 package me.gravityio.multiline_mastery.mixins.impl;
 
+import me.gravityio.multiline_mastery.ModConfig;
 import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -10,11 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(PlayerEntity.class)
-public class ModPlayerMixin implements ModPlayer {
+public abstract class ModPlayerMixin extends LivingEntity implements ModPlayer  {
     @Unique
     List<FishingBobberEntity> modBobbers = new ArrayList<>();
     @Unique
     private int angle;
+
+    protected ModPlayerMixin(EntityType<? extends LivingEntity> entityType, World world) {
+        super(entityType, world);
+    }
 
     @Override
     public List<FishingBobberEntity> fishingButGood$getBobbers() {
@@ -23,7 +31,7 @@ public class ModPlayerMixin implements ModPlayer {
 
     @Override
     public int fishingButGood$getAngle() {
-        return this.angle;
+        return this.getWorld().isClient ? ModConfig.HANDLER.instance().angle.get() : this.angle;
     }
 
     @Override

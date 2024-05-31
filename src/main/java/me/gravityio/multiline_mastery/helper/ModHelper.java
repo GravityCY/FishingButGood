@@ -37,7 +37,7 @@ public class ModHelper {
 
     /**
      * Gets the bobber the player is looking at <br>
-     * If you can throw more bobbers return the one you're looking at <br>
+     * If you can throw more bobbers return the closest one you're looking at <br>
      * If you can't throw more bobbers return the closest one
      */
     public static FishingBobberEntity getLookingBobber(ModPlayer player, ItemStack rodStack) {
@@ -45,32 +45,23 @@ public class ModHelper {
         if (allBobbers.isEmpty()) return null;
 
         if (ModHelper.canCastBobber(player, rodStack)) {
-            return getLookingBobber(player, allBobbers);
+            return getClosestLookingBobber(player, allBobbers, true);
         } else {
-            return getClosestLookingBobber(player, allBobbers);
+            return getClosestLookingBobber(player, allBobbers, false);
         }
-    }
-
-    private static FishingBobberEntity getLookingBobber(ModPlayer player, List<FishingBobberEntity> bobbers) {
-        if (bobbers.isEmpty()) return null;
-        for (FishingBobberEntity bobber : bobbers) {
-            if (isLookingAtBobber(player, bobber, ModConfig.HANDLER.instance().angle.get()))
-                return bobber;
-        }
-        return null;
     }
 
     /**
      * Given a list of bobbers return the one that is closest in regard to Y view angle
      */
-    private static FishingBobberEntity getClosestLookingBobber(ModPlayer player, List<FishingBobberEntity> bobbers) {
+    private static FishingBobberEntity getClosestLookingBobber(ModPlayer player, List<FishingBobberEntity> bobbers, boolean withinAngle) {
         if (bobbers.isEmpty()) return null;
         FishingBobberEntity closestBobber = null;
         double closest = 1000.0;
 
         for (FishingBobberEntity bobber : bobbers) {
-            var lookAngle = getLookAngle(player, bobber);
-            if (lookAngle > closest) continue;
+            var lookAngle = Math.toDegrees(getLookAngle(player, bobber));
+            if (lookAngle > closest || (withinAngle && lookAngle > player.fishingButGood$getAngle())) continue;
             closest = lookAngle;
             closestBobber = bobber;
         }

@@ -40,7 +40,7 @@ public class ModConfig {
                     .name(Text.translatable("yacl.multilinemastery.angle.label"))
                     .description(OptionDescription.of(Text.translatable("yacl.multilinemastery.angle.description")))
                     .binding(defaults.angle.get(), config.angle::get, config.angle::set)
-                    .customController(opt -> new AngleSliderController(opt, 10, 45, 1));
+                    .customController(opt -> new AngleSliderController(opt, 1, 90, 1));
 
             category.option(angleOpt.build());
 
