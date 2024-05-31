@@ -7,7 +7,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 public class SyncPacket implements FabricPacket {
-    public static PacketType<SyncPacket> TYPE = PacketType.create(new Identifier(MultilineMastery.MOD_ID, "sync"), SyncPacket::new);
+    public static final PacketType<SyncPacket> TYPE = PacketType.create(new Identifier(MultilineMastery.MOD_ID, "sync"), SyncPacket::new);
     private final int angle;
 
     public SyncPacket(int angle) {

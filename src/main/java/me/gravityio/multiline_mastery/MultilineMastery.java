@@ -32,11 +32,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class MultilineMastery implements ModInitializer, PreLaunchEntrypoint {
-    public static String MOD_ID = "multilinemastery";
-    public static Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final String MOD_ID = "multilinemastery";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static boolean IS_DEBUG = false;
+
     public static MultilineMasteryEnchant MULTILINE_MASTERY_ENCHANT;
     public static SeafarersFortuneEnchant SEAFARERS_FORTUNE_ENCHANT;
-    public static boolean IS_DEBUG = false;
 
     public static void DEBUG(String message, Object... args) {
         if (IS_DEBUG) LOGGER.info(message, args);

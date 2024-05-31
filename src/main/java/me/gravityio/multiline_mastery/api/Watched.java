@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 
 public class Watched<T> {
 
-    public Set<Consumer<T>> watchers = new HashSet<>();
+    public final Set<Consumer<T>> watchers = new HashSet<>();
 
     private T t;
 

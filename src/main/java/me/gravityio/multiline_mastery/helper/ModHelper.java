@@ -1,6 +1,5 @@
 package me.gravityio.multiline_mastery.helper;
 
-import me.gravityio.multiline_mastery.ModConfig;
 import me.gravityio.multiline_mastery.MultilineMastery;
 import me.gravityio.multiline_mastery.mixins.inter.ModFishingBobber;
 import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;

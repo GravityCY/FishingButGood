@@ -16,7 +16,7 @@ import java.util.List;
 @Mixin(PlayerEntity.class)
 public abstract class ModPlayerMixin extends LivingEntity implements ModPlayer  {
     @Unique
-    List<FishingBobberEntity> modBobbers = new ArrayList<>();
+    private final List<FishingBobberEntity> modBobbers = new ArrayList<>();
     @Unique
     private int angle;
 

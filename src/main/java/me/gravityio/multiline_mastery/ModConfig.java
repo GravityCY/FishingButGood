@@ -18,7 +18,7 @@ import net.minecraft.util.Identifier;
 
 public class ModConfig {
 
-    public static ConfigClassHandler<ModConfig> HANDLER = ConfigClassHandler.createBuilder(ModConfig.class)
+    public static final ConfigClassHandler<ModConfig> HANDLER = ConfigClassHandler.createBuilder(ModConfig.class)
             .id(new Identifier(MultilineMastery.MOD_ID, "my_config"))
             .serializer(config -> GsonConfigSerializerBuilder.create(config)
                     .setPath(FabricLoader.getInstance().getConfigDir().resolve("multiline_mastery.json5"))
