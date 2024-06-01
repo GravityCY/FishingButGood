@@ -4,6 +4,8 @@ ___
 **Requires [FAPI](${fabric}) and [YACL](${yacl})**
 \
 **Recommend [ModMenu](${modmenu})**
+\
+**Need on Client: ✅ Need on Server: ✅** 
 
 ![Sample](https://github.com/GravityCY/FishingButGood/assets/49225419/4480a3b7-09a7-4905-b632-015d8ab311fe)
 ___
