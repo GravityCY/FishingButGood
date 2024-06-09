@@ -1,52 +1,55 @@
-
 plugins {
     id "fabric-loom" version "1.6-SNAPSHOT"
     id "maven-publish"
     id "com.modrinth.minotaur" version "2.+"
     id 'net.darkhax.curseforgegradle' version "1.1.24"
+    id "me.gravityio.replacementplugin" version "0.0.7" // my local experimental plugin, just delete if you fork
 }
 
 version = project.mod_version
 group = "me.gravityio"
 
-def dependencyURLS = [
-        modrinth: [
-                yacl: "https://modrinth.com/mod/yacl",
-                fabric: "https://modrinth.com/mod/fabric-api",
-                modmenu: "https://modrinth.com/mod/modmenu"
-        ],
-        curseforge: [
-                yacl: "https://www.curseforge.com/minecraft/mc-mods/yacl",
-                fabric: "https://www.curseforge.com/minecraft/mc-mods/fabric-api",
-                modmenu: "https://www.curseforge.com/minecraft/mc-mods/modmenu"
-        ]
-]
-
 def changelog = "+ Release!"
 def mcVersions = ["1.20.5", "1.20.6"]
 
-def replace(String input, String name, Map<String, Map<String, String>> names, String fileName) {
-    def cf = file("${fileName}.md")
+base {
+    archivesName = project.mod_id
+}
 
-    def replaced = input
-    names[name].each {
-        replaced = replaced.replace('${'+it.key+'}', it.value)
+repositories {
+    maven { url "https://jitpack.io" } // Mixin Extras
+    maven { url "https://maven.terraformersmc.com/releases/" } // ModMenu
+    // YACL
+    maven {
+        name 'Xander Maven'
+        url 'https://maven.isxander.dev/releases'
     }
-    cf.write(replaced, "UTF-8")
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" } // YACL DEP
 }
 
-def replace(String input, String name, Map names) {
-    replace(input, name, names, name.toUpperCase())
+// To separate default stuff with actual dependencies
+project.dependencies.add("minecraft", "com.mojang:minecraft:${project.minecraft_version}")
+project.dependencies.add("mappings", "net.fabricmc:yarn:${project.project.yarn_version}:v2")
+project.dependencies.add("modImplementation", "net.fabricmc:fabric-loader:${project.loader_version}")
+project.dependencies.add("modImplementation", "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
+
+dependencies {
+    modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric")
+    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
+
+    implementation("com.github.LlamaLad7:MixinExtras:0.1.1")
+    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.1.1")
+    include("com.github.LlamaLad7:MixinExtras:0.1.1")
 }
 
-tasks.register("readme") {
-    group = "documentation"
-
-    def input = file("README-TEMPLATE.md")
-    def inputText = input.getText("UTF-8")
-    replace(inputText, "curseforge", dependencyURLS, "readmes/CURSEFORGE")
-    replace(inputText, "modrinth", dependencyURLS, "readmes/MODRINTH")
-    replace(inputText, "modrinth", dependencyURLS, "README")
+replacement {
+    fileName = "README.md"
+    types = ["modrinth", "curseforge"]
+    values = [
+            "fabric": ["https://modrinth.com/mod/fabric-api", "https://curseforge.com/minecraft/mc-mods/fabric-api"],
+            "yacl": ["https://modrinth.com/mod/yacl", "https://curseforge.com/minecraft/mc-mods/yacl"],
+            "modmenu": ["https://modrinth.com/mod/modmenu", "https://curseforge.com/minecraft/mc-mods/modmenu"]
+    ]
 }
 
 tasks.register("publishMod") {
@@ -91,36 +94,6 @@ modrinth {
         required.project "yacl"
         optional.project "modmenu"
     }
-}
-
-repositories {
-    maven { url "https://jitpack.io" } // Mixin Extras
-    maven { url "https://maven.terraformersmc.com/releases/" } // ModMenu
-    // YACL
-    maven {
-        name 'Xander Maven'
-        url 'https://maven.isxander.dev/releases'
-    }
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" } // YACL DEP
-}
-
-// To separate default stuff with actual dependencies
-project.dependencies.add("minecraft", "com.mojang:minecraft:${project.minecraft_version}")
-project.dependencies.add("mappings", "net.fabricmc:yarn:${project.project.yarn_version}:v2")
-project.dependencies.add("modImplementation", "net.fabricmc:fabric-loader:${project.loader_version}")
-project.dependencies.add("modImplementation", "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
-
-dependencies {
-    modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric")
-    modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
-
-    implementation("com.github.LlamaLad7:MixinExtras:0.1.1")
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.1.1")
-    include("com.github.LlamaLad7:MixinExtras:0.1.1")
-}
-
-base {
-    archivesName = project.mod_id
 }
 
 processResources  {
