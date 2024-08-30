@@ -20,10 +20,10 @@
       "me.gravityio.multiline_mastery.client.MultilineMasteryClient"
     ],
     "main": [
-      "me.gravityio.multiline_mastery.MultilineMastery"
+      "me.gravityio.multiline_mastery.MultilineMasteryMod"
     ],
     "preLaunch": [
-      "me.gravityio.multiline_mastery.MultilineMastery"
+      "me.gravityio.multiline_mastery.MultilineMasteryMod"
     ],
     "modmenu": [
       "me.gravityio.multiline_mastery.compat.ModMenuImpl"

@@ -1,6 +1,6 @@
 package me.gravityio.multiline_mastery.mixins.impl;
 
-import me.gravityio.multiline_mastery.MultilineMastery;
+import me.gravityio.multiline_mastery.MultilineMasteryMod;
 import me.gravityio.multiline_mastery.helper.ModHelper;
 import me.gravityio.multiline_mastery.mixins.inter.ModFishingBobber;
 import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
@@ -70,13 +70,13 @@ public abstract class FishingBobberMixin extends ProjectileEntity implements Mod
         if (fishingBobber == null) {
             if (thrown == 1)
                 player.fishHook = null;
-            MultilineMastery.DEBUG("Removing Mod Bobber");
+            MultilineMasteryMod.DEBUG("Removing Mod Bobber");
             ModHelper.removeModBobber(modPlayer, self);
         } else {
             if (thrown == 0) {
                 player.fishHook = fishingBobber;
             }
-            MultilineMastery.DEBUG("Adding Mod Bobber");
+            MultilineMasteryMod.DEBUG("Adding Mod Bobber");
             ModHelper.addModBobber(modPlayer, fishingBobber);
         }
         ci.cancel();

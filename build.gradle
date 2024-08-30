@@ -9,11 +9,15 @@ plugins {
 version = project.mod_version
 group = "me.gravityio"
 
-def changelog = "+ Release!"
-def mcVersions = ["1.20.5", "1.20.6"]
+def changelog = "+ Update to 1.21"
+def mcVersions = ["1.21"]
 
 base {
     archivesName = project.mod_id
+}
+
+fabricApi {
+    configureDataGeneration()
 }
 
 repositories {

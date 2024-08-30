@@ -2,7 +2,7 @@ package me.gravityio.multiline_mastery.mixins.impl;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import me.gravityio.multiline_mastery.ModConfig;
-import me.gravityio.multiline_mastery.MultilineMastery;
+import me.gravityio.multiline_mastery.MultilineMasteryMod;
 import me.gravityio.multiline_mastery.helper.ModHelper;
 import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
 import net.minecraft.client.render.RenderLayer;
@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(FishingBobberEntityRenderer.class)
 public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingBobberEntity> {
     @Unique
-    private static final Identifier HOVER_TEXTURE = new Identifier(MultilineMastery.MOD_ID, "textures/entity/fishing_bobber_hover.png");
+    private static final Identifier HOVER_TEXTURE = Identifier.of(MultilineMasteryMod.MOD_ID, "textures/entity/fishing_bobber_hover.png");
     @Unique
     private static final RenderLayer HOVER_LAYER = RenderLayer.getEntityCutout(HOVER_TEXTURE);
 

@@ -1,12 +1,18 @@
 package me.gravityio.multiline_mastery.helper;
 
-import me.gravityio.multiline_mastery.MultilineMastery;
+import me.gravityio.multiline_mastery.MultilineMasteryMod;
 import me.gravityio.multiline_mastery.mixins.inter.ModFishingBobber;
 import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
+import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.projectile.FishingBobberEntity;
 import net.minecraft.item.FishingRodItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -73,7 +79,7 @@ public class ModHelper {
     public static boolean canCastBobber(ModPlayer player, ItemStack rod) {
         var thrown = getTotalThrownHooks(player);
         if (thrown == 0) return true;
-        var multiLevel = getMultiLevel(rod);
+        var multiLevel = getMultiLevel(player.fishingButGood$getPlayer().getWorld(), rod);
         if (multiLevel == 0)
             return false;
         return multiLevel >= thrown;
@@ -92,8 +98,8 @@ public class ModHelper {
     }
 
     public static void summonModBobber(World world, ModPlayer player, ItemStack fishingRod) {
-        int i = EnchantmentHelper.getLure(fishingRod);
-        int j = EnchantmentHelper.getLuckOfTheSea(fishingRod);
+        int i = getEnchantmentLevel(world, Enchantments.LURE, fishingRod);
+        int j = getEnchantmentLevel(world, Enchantments.LUCK_OF_THE_SEA, fishingRod);
         var bobber = new FishingBobberEntity(player.fishingButGood$getPlayer(), world, j, i);
         modifyModBobber(bobber, fishingRod);
         world.spawnEntity(bobber);
@@ -101,12 +107,12 @@ public class ModHelper {
 
     public static void modifyModBobber(FishingBobberEntity bobber, ItemStack stack) {
         var modBobber = (ModFishingBobber) bobber;
-        var fortune = getSeafarersFortuneLevel(stack);
+        var fortune = getSeafarersFortuneLevel(bobber.getWorld(), stack);
         modBobber.fishingButGood$setSeafarersFortune(fortune);
     }
 
-    public static int getSeafarersFortuneLevel(ItemStack stack) {
-        return EnchantmentHelper.getLevel(MultilineMastery.SEAFARERS_FORTUNE_ENCHANT, stack);
+    public static int getSeafarersFortuneLevel(World world, ItemStack stack) {
+        return getEnchantmentLevel(world, MultilineMasteryMod.SEAFARERS_FORTUNE_KEY, stack);
     }
 
     public static ItemStack getFishingRod(ModPlayer player) {
@@ -118,8 +124,8 @@ public class ModHelper {
         return null;
     }
 
-    public static int getMultiLevel(ItemStack stack) {
-        return EnchantmentHelper.getLevel(MultilineMastery.MULTILINE_MASTERY_ENCHANT, stack);
+    public static int getMultiLevel(World world, ItemStack stack) {
+        return getEnchantmentLevel(world, MultilineMasteryMod.MULTILINE_MASTERY_KEY, stack);
     }
 
     public static void addModBobber(ModPlayer player, FishingBobberEntity bobber) {
@@ -129,4 +135,23 @@ public class ModHelper {
     public static void removeModBobber(ModPlayer player, FishingBobberEntity bobber) {
         player.fishingButGood$getBobbers().remove(bobber);
     }
+
+    public static RegistryEntry.Reference<Enchantment> getEnchantmentEntry(World world, RegistryKey<Enchantment> key) {
+        return getEnchantmentEntry(world.getRegistryManager(), key);
+    }
+
+    public static RegistryEntry.Reference<Enchantment> getEnchantmentEntry(DynamicRegistryManager registry, RegistryKey<Enchantment> key) {
+        return registry.get(RegistryKeys.ENCHANTMENT).getEntry(key).orElseThrow();
+    }
+
+    public static int getEnchantmentLevel(World world, RegistryKey<Enchantment> key, ItemStack stack) {
+        return getEnchantmentLevel(world.getRegistryManager(), key, stack);
+    }
+
+    public static int getEnchantmentLevel(DynamicRegistryManager registry, RegistryKey<Enchantment> key, ItemStack stack) {
+        return EnchantmentHelper.getLevel(getEnchantmentEntry(registry, key), stack);
+    }
+
+
+
 }

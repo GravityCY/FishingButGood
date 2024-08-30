@@ -1,6 +1,6 @@
 package me.gravityio.multiline_mastery.mixins.impl;
 
-import me.gravityio.multiline_mastery.MultilineMastery;
+import me.gravityio.multiline_mastery.MultilineMasteryMod;
 import me.gravityio.multiline_mastery.helper.ModHelper;
 import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
 import net.minecraft.entity.EquipmentSlot;
@@ -45,7 +45,7 @@ public class FishingRodMixin extends Item {
                     cir.setReturnValue(TypedActionResult.success(stack, true));
                     return;
                 }
-                MultilineMastery.DEBUG("Casting a Hook!");
+                MultilineMasteryMod.DEBUG("Casting a Hook!");
                 ModHelper.summonModBobber(world, modPlayer, stack);
             }
         } else {
@@ -55,7 +55,7 @@ public class FishingRodMixin extends Item {
                 cir.setReturnValue(TypedActionResult.success(stack, true));
                 return;
             }
-            MultilineMastery.DEBUG("Using Hook player is looking at!");
+            MultilineMasteryMod.DEBUG("Using Hook player is looking at!");
             int i = looking.use(stack);
             stack.damage(i, player, slot);
         }
