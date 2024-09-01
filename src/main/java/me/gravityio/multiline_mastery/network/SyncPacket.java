@@ -1,24 +1,26 @@
 package me.gravityio.multiline_mastery.network;
 
 import me.gravityio.multiline_mastery.MultilineMasteryMod;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
+
 import net.minecraft.network.FriendlyByteBuf;
 
 //? if >=1.20.5 {
-/*import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
+//?} else {
+/*import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 *///?}
 
 //? if >=1.20.5 {
-/*public class SyncPacket implements CustomPacketPayload {
+public class SyncPacket implements CustomPacketPayload {
     public static final Type<SyncPacket> TYPE = new Type<>(MultilineMasteryMod.id("sync"));
     public static final StreamCodec<FriendlyByteBuf, SyncPacket> CODEC = StreamCodec.ofMember(SyncPacket::write, SyncPacket::new);
-*///?} else {
-public class SyncPacket implements FabricPacket {
+//?} else {
+/*public class SyncPacket implements FabricPacket {
     public static final PacketType<SyncPacket> TYPE = PacketType.create(MultilineMasteryMod.id("sync"), SyncPacket::new);
-//?}
+*///?}
     private final int angle;
 
     public SyncPacket(int angle) {
@@ -38,14 +40,14 @@ public class SyncPacket implements FabricPacket {
     }
 
     //? if >=1.20.5 {
-    /*@Override
+    @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
-    *///?} else {
-    @Override
+    //?} else {
+    /*@Override
     public PacketType<?> getType() {
         return TYPE;
     }
-    //?}
+    *///?}
 }

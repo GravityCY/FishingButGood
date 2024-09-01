@@ -78,8 +78,8 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     group = "publishing"
     apiToken = System.getenv("CURSEFORGE_UPLOAD")
 
-    def mainFile = upload(1027692, remapJar)
-    mainFile.changelog = changelog
+    def mainFile = upload(rootProject.curseforge_id, remapJar)
+    mainFile.changelog = rootProject.changelog
     mcVersions.each {
         mainFile.addGameVersion(it)
     }
@@ -87,25 +87,36 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     mainFile.addEnvironment("Client", "Server")
     mainFile.addModLoader("Fabric")
     mainFile.releaseType = "release"
-    mainFile.addJavaVersion("Java 21")
+    mainFile.addJavaVersion("Java ${javaVersionNum}")
     mainFile.addRequirement("fabric-api")
     mainFile.addRequirement("yacl")
     mainFile.addOptional("modmenu")
+
+    doLast {
+        rootProject.ext.data.get(stonecutter.current.project).curseFileId = mainFile.curseFileId
+    }
 }
 
 modrinth {
     token = System.getenv("MODRINTH_UPLOAD")
-    projectId = "multiline-mastery"
-    versionName = "${mod_name} ${mod_version}"
-    versionNumber = mod_version
+    projectId = rootProject.modrinth_id
+    versionName = "${rootProject.mod_name} ${project.version}"
+    versionNumber = project.version
     uploadFile = remapJar
     gameVersions = mcVersions
     loaders = ["fabric"]
-    delegate.changelog = changelog
+    delegate.changelog = rootProject.changelog
     dependencies {
         required.project "fabric-api"
         required.project "yacl"
         optional.project "modmenu"
+    }
+}
+
+
+tasks.named("modrinth").configure {
+    doLast {
+        rootProject.ext.data.get(stonecutter.current.project).modrinthFileId = it.uploadInfo.id
     }
 }
 

@@ -56,10 +56,10 @@ public class FishingRodMixin extends Item {
             MultilineMasteryMod.DEBUG("Using Hook player is looking at!");
             int i = looking.retrieve(stack);
             //? if >=1.20.5 {
-            /*stack.hurtAndBreak(i, player, slot);
-            *///?} else {
-            stack.hurtAndBreak(i, player, player1 -> player1.broadcastBreakEvent(slot));
-            //?}
+            stack.hurtAndBreak(i, player, slot);
+            //?} else {
+            /*stack.hurtAndBreak(i, player, player1 -> player1.broadcastBreakEvent(slot));
+            *///?}
         }
         cir.setReturnValue(InteractionResultHolder.sidedSuccess(stack, world.isClientSide));
     }

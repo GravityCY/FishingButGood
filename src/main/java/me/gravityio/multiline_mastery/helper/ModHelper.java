@@ -15,11 +15,11 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 //? if >=1.21 {
-/*import net.minecraft.core.Holder;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-*///?}
+//?}
 
 
 public class ModHelper {
@@ -103,12 +103,12 @@ public class ModHelper {
 
     public static void summonModBobber(Level world, ModPlayer player, ItemStack fishingRod) {
         //? if >=1.21 {
-        /*int i = getEnchantmentLevel(world, Enchantments.LURE, fishingRod);
+        int i = getEnchantmentLevel(world, Enchantments.LURE, fishingRod);
         int j = getEnchantmentLevel(world, Enchantments.LUCK_OF_THE_SEA, fishingRod);
-        *///?} else {
-        int i = getEnchantmentLevel(Enchantments.FISHING_SPEED, fishingRod);
+        //?} else {
+        /*int i = getEnchantmentLevel(Enchantments.FISHING_SPEED, fishingRod);
         int j = getEnchantmentLevel(Enchantments.FISHING_LUCK, fishingRod);
-        //?}
+        *///?}
         var bobber = new FishingHook(player.fishingButGood$getPlayer(), world, j, i);
         modifyModBobber(bobber, fishingRod);
         world.addFreshEntity(bobber);
@@ -122,10 +122,10 @@ public class ModHelper {
 
     public static int getSeafarersFortuneLevel(Level world, ItemStack stack) {
         //? if >=1.21 {
-        /*return getEnchantmentLevel(world, MultilineMasteryMod.SEAFARERS_FORTUNE_KEY, stack);
-        *///?} else {
-        return getEnchantmentLevel(MultilineMasteryMod.SEAFARERS_FORTUNE_ENCHANT, stack);
-        //?}
+        return getEnchantmentLevel(world, MultilineMasteryMod.SEAFARERS_FORTUNE_KEY, stack);
+        //?} else {
+        /*return getEnchantmentLevel(MultilineMasteryMod.SEAFARERS_FORTUNE_ENCHANT, stack);
+        *///?}
     }
 
     public static ItemStack getFishingRod(ModPlayer player) {
@@ -139,10 +139,10 @@ public class ModHelper {
 
     public static int getMultiLevel(Level world, ItemStack stack) {
         //? if >=1.21 {
-        /*return getEnchantmentLevel(world, MultilineMasteryMod.MULTILINE_MASTERY_KEY, stack);
-        *///?} else {
-        return getEnchantmentLevel(MultilineMasteryMod.MULTILINE_MASTERY_ENCHANT, stack);
-        //?}
+        return getEnchantmentLevel(world, MultilineMasteryMod.MULTILINE_MASTERY_KEY, stack);
+        //?} else {
+        /*return getEnchantmentLevel(MultilineMasteryMod.MULTILINE_MASTERY_ENCHANT, stack);
+        *///?}
     }
 
     public static void addModBobber(ModPlayer player, FishingHook bobber) {
@@ -155,7 +155,7 @@ public class ModHelper {
 
     //? if >=1.21 {
 
-    /*public static Holder<Enchantment> getEnchantmentEntry(Level world, ResourceKey<Enchantment> key) {
+    public static Holder<Enchantment> getEnchantmentEntry(Level world, ResourceKey<Enchantment> key) {
         return getEnchantmentEntry(world.registryAccess(), key);
     }
 
@@ -171,11 +171,11 @@ public class ModHelper {
         return EnchantmentHelper.getItemEnchantmentLevel(getEnchantmentEntry(registry, key), stack);
     }
 
-    *///?} else {
-    public static int getEnchantmentLevel(Enchantment enchantment, ItemStack stack) {
+    //?} else {
+    /*public static int getEnchantmentLevel(Enchantment enchantment, ItemStack stack) {
         return EnchantmentHelper.getItemEnchantmentLevel(enchantment, stack);
     }
-    //?}
+    *///?}
 
 
 }
