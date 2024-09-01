@@ -5,13 +5,13 @@ import me.gravityio.multiline_mastery.network.SyncPacket;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 
 public class MultilineMasteryClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ModConfig.HANDLER.instance().angle.changed(v -> {
-            if (MinecraftClient.getInstance().world == null) return;
+            if (Minecraft.getInstance().level == null) return;
             ClientPlayNetworking.send(new SyncPacket(v));
         });
 

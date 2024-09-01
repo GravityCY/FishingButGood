@@ -1,17 +1,18 @@
 package me.gravityio.multiline_mastery.mixins.impl;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import me.gravityio.multiline_mastery.MultilineMasteryMod;
 import me.gravityio.multiline_mastery.helper.ModHelper;
 import me.gravityio.multiline_mastery.mixins.inter.ModFishingBobber;
 import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.FishingBobberEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.context.LootContextParameterSet;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.FishingHook;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -24,16 +25,16 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import java.util.List;
 
-@Mixin(FishingBobberEntity.class)
-public abstract class FishingBobberMixin extends ProjectileEntity implements ModFishingBobber {
+@Mixin(FishingHook.class)
+public abstract class FishingBobberMixin extends Projectile implements ModFishingBobber {
 
     @Shadow
-    public abstract @Nullable PlayerEntity getPlayerOwner();
+    public abstract @Nullable Player getPlayerOwner();
 
     @Unique
     private int seafarersFortune;
 
-    public FishingBobberMixin(EntityType<? extends ProjectileEntity> entityType, World world) {
+    public FishingBobberMixin(EntityType<? extends Projectile> entityType, Level world) {
         super(entityType, world);
     }
 
@@ -43,41 +44,40 @@ public abstract class FishingBobberMixin extends ProjectileEntity implements Mod
     }
 
     @Inject(
-            method = "use",
+            method = "retrieve",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/advancement/criterion/FishingRodHookedCriterion;trigger(Lnet/minecraft/server/network/ServerPlayerEntity;Lnet/minecraft/item/ItemStack;Lnet/minecraft/entity/projectile/FishingBobberEntity;Ljava/util/Collection;)V",
+                    target = "Lnet/minecraft/advancements/critereon/FishingRodHookedTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/projectile/FishingHook;Ljava/util/Collection;)V",
                     ordinal = 1
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
+            )
     )
-    private void onUseAddSeafarersFortune(ItemStack usedItem, CallbackInfoReturnable<Integer> cir, PlayerEntity playerEntity, int i, LootContextParameterSet lootContextParameterSet, LootTable lootTable, List<ItemStack> items) {
+    private void onUseAddSeafarersFortune(ItemStack stack, CallbackInfoReturnable<Integer> cir, @Local LootParams lootContextParameterSet, @Local LootTable lootTable, @Local List<ItemStack> items) {
         if (this.seafarersFortune == 0) return;
 
         var bound = this.random.nextInt(this.seafarersFortune) + 1;
         for (int x = 0; x < bound; x++) {
-            items.addAll(lootTable.generateLoot(lootContextParameterSet));
+            items.addAll(lootTable.getRandomItems(lootContextParameterSet));
         }
     }
 
-    @Inject(method = "setPlayerFishHook", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerEntity;fishHook:Lnet/minecraft/entity/projectile/FishingBobberEntity;"), cancellable = true)
-    private void setModdedPlayerFishHook(@Nullable FishingBobberEntity fishingBobber, CallbackInfo ci) {
-        var self = (FishingBobberEntity) (Object) this;
+    @Inject(method = "updateOwnerInfo", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/player/Player;fishing:Lnet/minecraft/world/entity/projectile/FishingHook;"), cancellable = true)
+    private void setModdedPlayerFishHook(@Nullable FishingHook hook, CallbackInfo ci) {
+        var self = (FishingHook) (Object) this;
         var player = this.getPlayerOwner();
         var modPlayer = (ModPlayer) player;
 
         var thrown = ModHelper.getTotalThrownHooks(modPlayer);
-        if (fishingBobber == null) {
+        if (hook == null) {
             if (thrown == 1)
-                player.fishHook = null;
+                player.fishing = null;
             MultilineMasteryMod.DEBUG("Removing Mod Bobber");
             ModHelper.removeModBobber(modPlayer, self);
         } else {
             if (thrown == 0) {
-                player.fishHook = fishingBobber;
+                player.fishing = hook;
             }
             MultilineMasteryMod.DEBUG("Adding Mod Bobber");
-            ModHelper.addModBobber(modPlayer, fishingBobber);
+            ModHelper.addModBobber(modPlayer, hook);
         }
         ci.cancel();
     }

@@ -1,27 +1,29 @@
 plugins {
-    id "fabric-loom" version "1.6-SNAPSHOT"
-    id "maven-publish"
+    id "fabric-loom" version "1.7-SNAPSHOT"
     id "com.modrinth.minotaur" version "2.+"
     id 'net.darkhax.curseforgegradle' version "1.1.24"
     id "me.gravityio.replacementplugin" version "0.0.7" // my local experimental plugin, just delete if you fork
 }
 
-version = project.mod_version
+version = "${rootProject.mod_version}+${project.name}"
 group = "me.gravityio"
 
-def changelog = "+ Update to 1.21"
-def mcVersions = ["1.21"]
+def javaVersionNum = project.java_version.toInteger()
+def javaVersion = JavaVersion.toVersion(javaVersionNum)
+def mcVersions = project.minecraft_versions.split(" ").toList()
 
 base {
-    archivesName = project.mod_id
+    archivesName = rootProject.mod_id
 }
 
-fabricApi {
-    configureDataGeneration()
+loom {
+    runConfigs.all {
+        ideConfigGenerated(true)
+        runDir = "../../run"
+    }
 }
 
 repositories {
-    maven { url "https://jitpack.io" } // Mixin Extras
     maven { url "https://maven.terraformersmc.com/releases/" } // ModMenu
     // YACL
     maven {
@@ -29,21 +31,28 @@ repositories {
         url 'https://maven.isxander.dev/releases'
     }
     maven { url "https://oss.sonatype.org/content/repositories/snapshots/" } // YACL DEP
+    maven {
+        name = 'ParchmentMC'
+        url = 'https://maven.parchmentmc.org'
+    }
 }
 
 // To separate default stuff with actual dependencies
-project.dependencies.add("minecraft", "com.mojang:minecraft:${project.minecraft_version}")
-project.dependencies.add("mappings", "net.fabricmc:yarn:${project.project.yarn_version}:v2")
-project.dependencies.add("modImplementation", "net.fabricmc:fabric-loader:${project.loader_version}")
+project.dependencies.add("minecraft", "com.mojang:minecraft:${project.name}")
+project.dependencies.add("mappings", loom.layered {
+    officialMojangMappings()
+    parchment("org.parchmentmc.data:${project.parchment_version}@zip")
+})
+project.dependencies.add("modImplementation", "net.fabricmc:fabric-loader:${rootProject.loader_version}")
 project.dependencies.add("modImplementation", "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
 dependencies {
-    modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric")
+    if (project.name == "1.20") {
+        modImplementation("dev.isxander.yacl:yet-another-config-lib-fabric:${project.yacl_version}")
+    } else {
+        modImplementation("dev.isxander:yet-another-config-lib:${project.yacl_version}-fabric")
+    }
     modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}")
-
-    implementation("com.github.LlamaLad7:MixinExtras:0.1.1")
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:0.1.1")
-    include("com.github.LlamaLad7:MixinExtras:0.1.1")
 }
 
 replacement {
@@ -101,16 +110,27 @@ modrinth {
 }
 
 processResources  {
+    def range = ""
+    mcVersions.eachWithIndex{ String str, int i ->
+        range += "\"$str\""
+        if (i != mcVersions.size() - 1)
+            range += ","
+    }
+
     def modProperties = [
-            "mod_id": project.mod_id,
-            "mod_name": project.mod_name,
-            "mod_version": project.mod_version,
-            "mod_description": project.mod_description,
-            "mod_author": project.mod_author,
-            "mod_sources": project.mod_sources,
-            "mod_license": project.mod_license,
-            "loader_version": project.loader_version,
-            "minecraft_version": project.minecraft_version
+            "mod_id": rootProject.mod_id,
+            "mod_name": rootProject.mod_name,
+            "mod_version": rootProject.mod_version,
+            "mod_description": rootProject.mod_description,
+            "mod_author": rootProject.mod_author,
+            "mod_sources": rootProject.mod_sources,
+            "mod_license": rootProject.mod_license,
+            "loader_version": rootProject.loader_version,
+            "minecraft_version": range,
+            "fabric_api_version": project.fabric_version,
+            "yacl_version": project.yacl_version,
+            "modmenu_version": project.modmenu_version,
+            "java_version": project.java_version
     ]
 
     inputs.properties(modProperties)
@@ -121,27 +141,18 @@ processResources  {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    it.options.release = 17
+    it.options.release = javaVersionNum
 }
 
 java {
     withSourcesJar()
 
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
 }
 
 jar {
     from("LICENSE") {
         rename { "${it}_${base.archivesName.get()}" }
     }
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-    repositories {}
 }

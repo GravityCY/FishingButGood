@@ -1,34 +1,51 @@
 package me.gravityio.multiline_mastery.network;
 
 import me.gravityio.multiline_mastery.MultilineMasteryMod;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.minecraft.network.FriendlyByteBuf;
 
-public class SyncPacket implements CustomPayload {
-    public static final Id<SyncPacket> ID = new Id<>(Identifier.of(MultilineMasteryMod.MOD_ID, "sync"));
-    public static final PacketCodec<PacketByteBuf, SyncPacket> CODEC = PacketCodec.of(SyncPacket::write, SyncPacket::new);
+//? if >=1.20.5 {
+/*import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import org.jetbrains.annotations.NotNull;
+*///?}
 
+//? if >=1.20.5 {
+/*public class SyncPacket implements CustomPacketPayload {
+    public static final Type<SyncPacket> TYPE = new Type<>(MultilineMasteryMod.id("sync"));
+    public static final StreamCodec<FriendlyByteBuf, SyncPacket> CODEC = StreamCodec.ofMember(SyncPacket::write, SyncPacket::new);
+*///?} else {
+public class SyncPacket implements FabricPacket {
+    public static final PacketType<SyncPacket> TYPE = PacketType.create(MultilineMasteryMod.id("sync"), SyncPacket::new);
+//?}
     private final int angle;
 
     public SyncPacket(int angle) {
         this.angle = angle;
     }
 
-    public SyncPacket(PacketByteBuf buf) {
+    public SyncPacket(FriendlyByteBuf buf) {
         this.angle = buf.readInt();
     }
 
-    public void write(PacketByteBuf buf) {
+    public void write(FriendlyByteBuf buf) {
         buf.writeInt(this.angle);
     }
+
     public int getAngle() {
         return this.angle;
     }
 
-    @Override
-    public Id<? extends CustomPayload> getId() {
-        return ID;
+    //? if >=1.20.5 {
+    /*@Override
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
+    *///?} else {
+    @Override
+    public PacketType<?> getType() {
+        return TYPE;
+    }
+    //?}
 }

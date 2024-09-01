@@ -1,1 +1,0 @@
-+ Add a config for the maximum amount of levels for each enchant?
