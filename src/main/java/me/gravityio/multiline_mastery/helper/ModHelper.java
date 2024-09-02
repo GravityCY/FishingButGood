@@ -105,7 +105,10 @@ public class ModHelper {
         //? if >=1.21 {
         int i = getEnchantmentLevel(world, Enchantments.LURE, fishingRod);
         int j = getEnchantmentLevel(world, Enchantments.LUCK_OF_THE_SEA, fishingRod);
-        //?} else {
+        //?} elif =1.20.5 {
+        /*int i = getEnchantmentLevel(Enchantments.LURE, fishingRod);
+        int j = getEnchantmentLevel(Enchantments.LUCK_OF_THE_SEA, fishingRod);
+        *///?} else {
         /*int i = getEnchantmentLevel(Enchantments.FISHING_SPEED, fishingRod);
         int j = getEnchantmentLevel(Enchantments.FISHING_LUCK, fishingRod);
         *///?}

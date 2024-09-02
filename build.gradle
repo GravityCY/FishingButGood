@@ -113,7 +113,6 @@ modrinth {
     }
 }
 
-
 tasks.named("modrinth").configure {
     doLast {
         rootProject.ext.data.get(stonecutter.current.project).modrinthFileId = it.uploadInfo.id
@@ -148,6 +147,20 @@ processResources  {
 
     filesMatching("fabric.mod.json") {
         expand modProperties
+    }
+
+    if (project.name == "1.21") {
+        doLast {
+            copy {
+                from("$buildDir/resources/main/data_1.21")
+                into("$buildDir/resources/main/data")
+                include "**/*"
+            }
+
+            delete "$buildDir/resources/main/data_1.21"
+        }
+    } else {
+        exclude("data_1.21/**")
     }
 }
 
