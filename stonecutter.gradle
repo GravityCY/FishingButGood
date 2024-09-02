@@ -12,7 +12,7 @@ rootProject.file("secrets.properties").withInputStream { secrets.load(it) }
 rootProject.ext.data = new LinkedHashMap<String, UploadData>()
 rootProject.ext.changelog = file("CHANGELOG.md").text
 
-def webhookUrl = secrets.get("webhook_url").toString()
+def webhookUrl = secrets.get("discord_webhook").toString()
 
 stonecutter.versions.forEach {
     rootProject.ext.data.put(it.project, new UploadData())
@@ -33,11 +33,11 @@ stonecutter.registerChiseled tasks.register("chiseledPublish") {
 
         rootProject.ext.data.each {
             UploadData upData = it.value
-            message += "# $rootProject.name $it.key Update ([Modrinth](<https://modrinth.com/mod/multiline-mastery/version/${upData.modrinthFileId}>) | [Curseforge](<https://curseforge.com/minecraft/mc-mods/multiline-mastery/files/${upData.curseFileId}>))\n"
+            message += "# $rootProject.name ${rootProject.mod_version}+${it.key} Update ([Modrinth](<https://modrinth.com/mod/multiline-mastery/version/${upData.modrinthFileId}>) | [Curseforge](<https://curseforge.com/minecraft/mc-mods/multiline-mastery/files/${upData.curseFileId}>))\n"
         }
-        message += "$rootProject.ext.changelog_overview\n\n"
+        message += "$rootProject.ext.changelog\n\n"
 
-        message += "**To view the details of the changelog visit the [Modrinth changelog page](<https://modrinth.com/mod/multiline-mastery/changelog>) or the [CurseForge files page](<https://curseforge.com/minecraft/mc-mods/multiline-mastery/files/${rootProject.ext.data.firstEntry().value.curseFileId}>)**\n"
+//        message += "**To view the details of the changelog visit the [Modrinth changelog page](<https://modrinth.com/mod/multiline-mastery/changelog>) or the [CurseForge files page](<https://curseforge.com/minecraft/mc-mods/multiline-mastery/files/${rootProject.ext.data.firstEntry().value.curseFileId}>)**\n"
         message += "**As always report any issues on my [GitHub](<${rootProject.mod_sources}>) or in https://discord.com/channels/1112046604183162961/1246456621404524605**\n"
         message += "<@&1277913110195208192>"
 

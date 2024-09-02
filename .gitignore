@@ -43,3 +43,4 @@ replay_*.log
 /readmes/
 
 secrets.properties
+temp/

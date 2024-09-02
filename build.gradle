@@ -83,7 +83,7 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     mcVersions.each {
         mainFile.addGameVersion(it)
     }
-    mainFile.displayName = "${mod_name} ${mod_version}"
+    mainFile.displayName = "${rootProject.mod_name} ${project.version}"
     mainFile.addEnvironment("Client", "Server")
     mainFile.addModLoader("Fabric")
     mainFile.releaseType = "release"
@@ -143,10 +143,19 @@ processResources  {
             "java_version": project.java_version
     ]
 
+    def mixinProperties = [
+            "java_version": project.java_version
+    ]
+
     inputs.properties(modProperties)
+    inputs.properties(mixinProperties)
 
     filesMatching("fabric.mod.json") {
         expand modProperties
+    }
+
+    filesMatching("multiline_mastery.mixins.json") {
+        expand mixinProperties
     }
 
     if (project.name == "1.21") {
