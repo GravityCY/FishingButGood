@@ -1,10 +1,12 @@
+import groovy.transform.Field
+
 plugins {
     id "me.gravityio.discord-webhook" version "0.0.3"
     id "me.gravityio.replacementplugin" version "0.0.7" // my local experimental plugin, just delete if you fork
 }
 
 plugins.apply "dev.kikugie.stonecutter"
-stonecutter.active "1.21" /* [SC] DO NOT EDIT */
+stonecutter.active "1.21.5" /* [SC] DO NOT EDIT */
 
 def secrets = new Properties()
 rootProject.file("secrets.properties").withInputStream { secrets.load(it) }
@@ -12,15 +14,36 @@ rootProject.file("secrets.properties").withInputStream { secrets.load(it) }
 rootProject.ext.data = new LinkedHashMap<String, UploadData>()
 rootProject.ext.changelog = file("CHANGELOG.md").text
 
-def webhookUrl = secrets.get("discord_webhook").toString()
-
-stonecutter.versions.forEach {
-    rootProject.ext.data.put(it.project, new UploadData())
-}
+rootProject.ext.currentRange = ">=1.21.2"
+rootProject.ext.webhookUrl = secrets.get("discord_webhook").toString()
 
 stonecutter.registerChiseled tasks.register("chiseledBuild", stonecutter.chiseled) { 
     group = "project"
     ofTask "build"
+}
+
+tasks.register("activeBuild") {
+    group = "project"
+    activeDepend(it, "build")
+}
+
+stonecutter.registerChiseled tasks.register("chiseledBuildRange") {
+    group = "project"
+    dependsOn "chiseledStonecutter"
+    chiseledDepends(it, "build", currentRange)
+//    doLast {
+//        makeDiscordMessage()
+//    }
+}
+
+stonecutter.registerChiseled tasks.register("chiseledPublishRange") {
+    group = "project"
+    dependsOn "chiseledStonecutter"
+    chiseledDepends(it, "publishMod", currentRange)
+
+    doLast {
+        onPublish()
+    }
 }
 
 stonecutter.registerChiseled tasks.register("chiseledPublish") {
@@ -29,25 +52,37 @@ stonecutter.registerChiseled tasks.register("chiseledPublish") {
     chiseledDepends(it, "publishMod")
 
     doLast {
-        def message = ""
+        onPublish()
+    }
+}
 
-        rootProject.ext.data.each {
-            UploadData upData = it.value
-            message += "# $rootProject.name ${rootProject.mod_version}+${it.key} Update ([Modrinth](<https://modrinth.com/mod/multiline-mastery/version/${upData.modrinthFileId}>) | [Curseforge](<https://curseforge.com/minecraft/mc-mods/multiline-mastery/files/${upData.curseFileId}>))\n"
-        }
-        message += "$rootProject.ext.changelog\n\n"
+def makeDiscordMessage() {
+    def message = ""
+
+    rootProject.ext.data.each {
+        UploadData upData = it.value
+        message += "# $rootProject.name ${rootProject.mod_version}+${it.key} Update ([Modrinth](<https://modrinth.com/mod/multiline-mastery/version/${upData.modrinthFileId}>) | [Curseforge](<https://curseforge.com/minecraft/mc-mods/multiline-mastery/files/${upData.curseFileId}>))\n"
+    }
+    message += "$rootProject.ext.changelog\n\n"
 
 //        message += "**To view the details of the changelog visit the [Modrinth changelog page](<https://modrinth.com/mod/multiline-mastery/changelog>) or the [CurseForge files page](<https://curseforge.com/minecraft/mc-mods/multiline-mastery/files/${rootProject.ext.data.firstEntry().value.curseFileId}>)**\n"
-        message += "**As always report any issues on my [GitHub](<${rootProject.mod_sources}>) or in https://discord.com/channels/1112046604183162961/1246456621404524605**\n"
-        message += "<@&1277913110195208192>"
+    message += "**As always report any issues on my [GitHub](<${rootProject.mod_sources}>) or in https://discord.com/channels/1112046604183162961/1246456621404524605**\n"
+    message += "<@&1277913110195208192>"
 
-        rootProject.file("temp").mkdir()
-        rootProject.file("temp/discord.md").write(message)
+    rootProject.file("temp").mkdir()
+    rootProject.file("temp/discord.md").write(message)
+    return message
+}
 
-        def config = discord_webhook.prepare(webhookUrl)
-        config.content(message)
-        discord_webhook.send()
-    }
+def onPublish() {
+    def message = makeDiscordMessage()
+    def config = discord_webhook.prepare(webhookUrl)
+    config.content(message)
+    discord_webhook.send()
+}
+
+def activeDepend(Task task, String subtaskName) {
+    task.dependsOn(project(stonecutter.current.project).tasks.named(subtaskName).get())
 }
 
 def chiseledDepends(Task task, String subtaskName) {
@@ -57,5 +92,17 @@ def chiseledDepends(Task task, String subtaskName) {
         def subtask = proj.tasks.named(subtaskName).get()
         task.dependsOn(subtask)
         subtask.mustRunAfter(setupTask)
+    }
+}
+
+def chiseledDepends(Task task, String subtaskName, String predicate) {
+    def setupTask = tasks.named("chiseledStonecutter")
+    stonecutter.versions.forEach {
+        if (stonecutter.eval(it.project, predicate)) {
+            def proj = rootProject.project(it.project)
+            def subtask = proj.tasks.named(subtaskName).get()
+            task.dependsOn(subtask)
+            subtask.mustRunAfter(setupTask)
+        }
     }
 }

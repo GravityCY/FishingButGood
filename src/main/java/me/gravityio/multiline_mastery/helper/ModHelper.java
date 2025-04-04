@@ -3,6 +3,7 @@ package me.gravityio.multiline_mastery.helper;
 import me.gravityio.multiline_mastery.MultilineMasteryMod;
 import me.gravityio.multiline_mastery.mixins.inter.ModFishingBobber;
 import me.gravityio.multiline_mastery.mixins.inter.ModPlayer;
+import me.gravityio.multiline_mastery.versioned.Common;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
@@ -112,7 +113,14 @@ public class ModHelper {
         /*int i = getEnchantmentLevel(Enchantments.FISHING_SPEED, fishingRod);
         int j = getEnchantmentLevel(Enchantments.FISHING_LUCK, fishingRod);
         *///?}
+
+        //? if >=1.21.4 {
         var bobber = new FishingHook(player.fishingButGood$getPlayer(), world, j, i);
+        //?} elif >=1.21.2 {
+        /*var bobber = new FishingHook(player.fishingButGood$getPlayer(), world, j, i, fishingRod);
+        *///?} else {
+        /*var bobber = new FishingHook(player.fishingButGood$getPlayer(), world, j, i);
+        *///?}
         modifyModBobber(bobber, fishingRod);
         world.addFreshEntity(bobber);
     }
@@ -132,7 +140,7 @@ public class ModHelper {
     }
 
     public static ItemStack getFishingRod(ModPlayer player) {
-        for (ItemStack handItem : player.fishingButGood$getPlayer().getHandSlots()) {
+        for (ItemStack handItem : Common.getHandSlots(player.fishingButGood$getPlayer())) {
             if (handItem.getItem() instanceof FishingRodItem) {
                 return handItem;
             }

@@ -15,10 +15,10 @@ import net.minecraft.world.item.enchantment.Enchantment;
 
     public SeafarersFortuneEnchant() {
         //? if =1.20.5 {
-        /^super(Enchantment.definition(ItemTags.FISHING_ENCHANTABLE, 1, MAX_LEVEL, Enchantment.constantCost(0), Enchantment.constantCost(0), 4, EquipmentSlot.MAINHAND));
-        ^///?} else {
-        super(Rarity.VERY_RARE, EnchantmentCategory.FISHING_ROD, new EquipmentSlot[] { EquipmentSlot.MAINHAND });
-        //?}
+        super(Enchantment.definition(ItemTags.FISHING_ENCHANTABLE, 1, MAX_LEVEL, Enchantment.constantCost(0), Enchantment.constantCost(0), 4, EquipmentSlot.MAINHAND));
+        //?} else {
+        /^super(Rarity.VERY_RARE, EnchantmentCategory.FISHING_ROD, new EquipmentSlot[] { EquipmentSlot.MAINHAND });
+        ^///?}
     }
 
     @Override
@@ -37,11 +37,11 @@ import net.minecraft.world.item.enchantment.Enchantment;
     }
 
     //? if =1.20 {
-    @Override
+    /^@Override
     public int getMaxLevel() {
         return MAX_LEVEL;
     }
-    //?}
+    ^///?}
 
 }
 *///?}

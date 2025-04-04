@@ -1,1 +1,1 @@
-- Developing for old Minecraft versions should be easier now, the codebase is now based on stonecutter!
+- Updated to 1.21.2-1.21.5

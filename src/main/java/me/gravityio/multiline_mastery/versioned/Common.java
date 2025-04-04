@@ -1,6 +1,8 @@
 package me.gravityio.multiline_mastery.versioned;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -18,6 +20,10 @@ import net.minecraft.core.registries.Registries;
 //?}
 
 public class Common {
+
+    public static ItemStack[] getHandSlots(Player player) {
+        return new ItemStack[] {player.getMainHandItem(), player.getOffhandItem()};
+    }
 
     public static ResourceLocation parse(String all) {
         //? if >=1.21 {

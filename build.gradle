@@ -1,5 +1,5 @@
 plugins {
-    id "fabric-loom" version "1.7-SNAPSHOT"
+    id "fabric-loom" version "1.10-SNAPSHOT"
     id "com.modrinth.minotaur" version "2.+"
     id 'net.darkhax.curseforgegradle' version "1.1.24"
     id "me.gravityio.replacementplugin" version "0.0.7" // my local experimental plugin, just delete if you fork
@@ -77,6 +77,13 @@ replacement {
     ]
 }
 
+//tasks.named("build").configure {
+//    doLast {
+//        (rootProject.ext.data.computeIfAbsent(stonecutter.current.project) { new UploadData() }).curseFileId = "curseforge test"
+//        (rootProject.ext.data.computeIfAbsent(stonecutter.current.project) { new UploadData() }).modrinthFileId = "modrinth test"
+//    }
+//}
+
 tasks.register("publishMod") {
     group = "publishing"
 
@@ -105,7 +112,7 @@ tasks.register('publishCurseForge', net.darkhax.curseforgegradle.TaskPublishCurs
     mainFile.addOptional("modmenu")
 
     doLast {
-        rootProject.ext.data.get(stonecutter.current.project).curseFileId = mainFile.curseFileId
+        (rootProject.ext.data.computeIfAbsent(stonecutter.current.project) { new UploadData() }).curseFileId = mainFile.curseFileId
     }
 }
 
@@ -127,7 +134,7 @@ modrinth {
 
 tasks.named("modrinth").configure {
     doLast {
-        rootProject.ext.data.get(stonecutter.current.project).modrinthFileId = it.uploadInfo.id
+        (rootProject.ext.data.computeIfAbsent(stonecutter.current.project) { new UploadData() }).modrinthFileId = it.uploadInfo.id
     }
 }
 
@@ -170,18 +177,40 @@ processResources  {
         expand mixinProperties
     }
 
-    if (project.name == "1.21") {
+    exclude("1.21/**")
+    exclude("1.21.2/**")
+
+    if (stonecutter.eval(project.name, ">=1.21")) {
         doLast {
             copy {
-                from("$buildDir/resources/main/data_1.21")
-                into("$buildDir/resources/main/data")
+                from(rootProject.file("src/main/resources/1.21"))
+                into("$buildDir/resources/main/")
                 include "**/*"
-            }
+                filesMatching("fabric.mod.json") {
+                    expand modProperties
+                }
 
-            delete "$buildDir/resources/main/data_1.21"
+                filesMatching("multiline_mastery.mixins.json") {
+                    expand mixinProperties
+                }
+            }
         }
-    } else {
-        exclude("data_1.21/**")
+    }
+    if (stonecutter.eval(project.name, ">=1.21.2")) {
+        doLast {
+            copy {
+                from(rootProject.file("src/main/resources/1.21.2"))
+                into("$buildDir/resources/main/")
+                include "**/*"
+                filesMatching("fabric.mod.json") {
+                    expand modProperties
+                }
+
+                filesMatching("multiline_mastery.mixins.json") {
+                    expand mixinProperties
+                }
+            }
+        }
     }
 }
 
