@@ -1,5 +1,5 @@
 //? if >=1.21.2 {
-package me.gravityio.multiline_mastery.mixins.impl;
+/*package me.gravityio.multiline_mastery.mixins.impl;
 import me.gravityio.multiline_mastery.mixins.inter.MultilineRenderState;
 import net.minecraft.client.renderer.entity.state.FishingHookRenderState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,4 +20,4 @@ public class FishingHookRenderStateMixin implements MultilineRenderState {
         this.shouldRender = render;
     }
 }
-//?}
+*///?}

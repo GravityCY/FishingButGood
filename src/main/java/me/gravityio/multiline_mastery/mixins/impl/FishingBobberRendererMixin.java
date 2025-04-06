@@ -20,18 +20,18 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 //? if >=1.21.2 {
-import me.gravityio.multiline_mastery.mixins.inter.MultilineRenderState;
+/*import me.gravityio.multiline_mastery.mixins.inter.MultilineRenderState;
 import net.minecraft.client.renderer.entity.state.FishingHookRenderState;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-//?}
+*///?}
 
 @Mixin(FishingHookRenderer.class)
 //? if >=1.21.2 {
-public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingHook, FishingHookRenderState> {
-//?} else {
-/*public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingHook> {
-*///?}
+/*public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingHook, FishingHookRenderState> {
+*///?} else {
+public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingHook> {
+//?}
     @Unique
     private static final ResourceLocation HOVER_TEXTURE = Common.parse(MultilineMasteryMod.MOD_ID, "textures/entity/fishing_bobber_hover.png");
     @Unique
@@ -42,7 +42,7 @@ public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingH
     }
 
     //? if >=1.21.2 {
-    @ModifyExpressionValue(
+    /*@ModifyExpressionValue(
             method = "render(Lnet/minecraft/client/renderer/entity/state/FishingHookRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At(
                     value = "INVOKE",
@@ -73,8 +73,8 @@ public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingH
         if (rodStack == null) return;
         ((MultilineRenderState)fishingHookRenderState).fishingButGood$setShouldRender(ModHelper.getLookingBobber(player, rodStack) == fishingHook);
     }
-    //?} else {
-    /*@ModifyExpressionValue(
+    *///?} else {
+    @ModifyExpressionValue(
             method = "render(Lnet/minecraft/world/entity/projectile/FishingHook;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
             at = @At(
                     value = "INVOKE",
@@ -98,6 +98,6 @@ public abstract class FishingBobberRendererMixin extends EntityRenderer<FishingH
         }
         return _original;
     }
-    *///?}
+    //?}
 
 }

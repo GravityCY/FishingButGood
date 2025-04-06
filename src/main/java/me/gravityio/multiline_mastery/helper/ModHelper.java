@@ -115,12 +115,12 @@ public class ModHelper {
         *///?}
 
         //? if >=1.21.4 {
-        var bobber = new FishingHook(player.fishingButGood$getPlayer(), world, j, i);
-        //?} elif >=1.21.2 {
+        /*var bobber = new FishingHook(player.fishingButGood$getPlayer(), world, j, i);
+        *///?} elif >=1.21.2 {
         /*var bobber = new FishingHook(player.fishingButGood$getPlayer(), world, j, i, fishingRod);
         *///?} else {
-        /*var bobber = new FishingHook(player.fishingButGood$getPlayer(), world, j, i);
-        *///?}
+        var bobber = new FishingHook(player.fishingButGood$getPlayer(), world, j, i);
+        //?}
         modifyModBobber(bobber, fishingRod);
         world.addFreshEntity(bobber);
     }

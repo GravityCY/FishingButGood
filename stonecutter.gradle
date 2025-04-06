@@ -6,7 +6,7 @@ plugins {
 }
 
 plugins.apply "dev.kikugie.stonecutter"
-stonecutter.active "1.21.5" /* [SC] DO NOT EDIT */
+stonecutter.active "1.21" /* [SC] DO NOT EDIT */
 
 def secrets = new Properties()
 rootProject.file("secrets.properties").withInputStream { secrets.load(it) }
@@ -24,16 +24,23 @@ stonecutter.registerChiseled tasks.register("chiseledBuild", stonecutter.chisele
 
 tasks.register("activeBuild") {
     group = "project"
+
     activeDepend(it, "build")
+}
+
+tasks.register("activePublish") {
+    group = "project"
+
+    activeDepend(it, "publishMod")
+    doLast {
+        onPublish()
+    }
 }
 
 stonecutter.registerChiseled tasks.register("chiseledBuildRange") {
     group = "project"
     dependsOn "chiseledStonecutter"
     chiseledDepends(it, "build", currentRange)
-//    doLast {
-//        makeDiscordMessage()
-//    }
 }
 
 stonecutter.registerChiseled tasks.register("chiseledPublishRange") {
